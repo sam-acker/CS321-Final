@@ -1,1 +1,23 @@
 
+class BTree{
+	
+	
+	
+	
+	
+	
+	class BTreeNode{
+		
+		
+		
+		
+		
+		
+	}
+	
+	
+	
+	
+	
+	
+}
