@@ -1,4 +1,4 @@
-## Readme
+# Readme
 You need to turn in a README file that describes the layout of the B-Tree file on
 disk as well as any other relevant observations.
 
