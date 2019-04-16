@@ -3,7 +3,7 @@ You need to turn in a README file that describes the layout of the B-Tree file o
 disk as well as any other relevant observations.
 
 
-###### 7 Progress Reports
+###### Progress Reports
 Each team member is responsible for sending me, via email, a short progress report each
 week. To clarify:
 one progress report, per week, per member
