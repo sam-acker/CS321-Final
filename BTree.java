@@ -1,7 +1,8 @@
 
 class BTree{
 	
-	
+	int degree;
+	int byteOffset; //root
 	
 	
 	
