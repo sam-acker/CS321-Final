@@ -11,8 +11,7 @@ class GeneBankCreateBTree{
 
 	*/	
 	public static void main(String... Args){
-		
-		//Parse input
+		//Parse input 
 		try{
 		boolean useCache=false;
 		int degree=Integer.parseInt(Args[1]);
