@@ -1,9 +1,11 @@
-
+import java.io.File;
+import java.io.FileNotFoundException;
 
 
 class GeneBankCreateBTree{
 	
 	
+	private static BTree bTree;
 	
 	/**
 	
@@ -11,13 +13,18 @@ class GeneBankCreateBTree{
 
 	*/	
 	public static void main(String... Args){
-		//Parse input 
-		try{
-		boolean useCache=false;
-		int degree=Integer.parseInt(Args[1]);
-		String gpkFileName=Args[2];
+		
+		int degree=0;
 		int debugLevel=0;
-		int seqLength=Integer.parseInt(Args[3]);
+		int seqLength=0;
+		String gbkFileName=" ";
+		boolean useCache=false;
+		
+		//Parse arg input 
+		try{
+		degree=Integer.parseInt(Args[1]);
+		gbkFileName=Args[2];
+		seqLength=Integer.parseInt(Args[3]);
 		if (Args[0]=="1"){
 			useCache=true;
 		}
@@ -25,18 +32,27 @@ class GeneBankCreateBTree{
 			debugLevel=Integer.parseInt(Args[4]);
 		}
 		}catch(Exception e){
-			System.out.println("Error; format should be following:\njava GeneBankCreateBTree <0/1(no/with Cache)> <degree> <gbk file> <sequence length> [<debug level>]");
+			System.err.println("Error; format should be following:\njava GeneBankCreateBTree <0/1(no/with Cache)> <degree> <gbk file> <sequence length> [<debug level>]");
 			return;
 		}
-		//End parsing
+		//End arg parsing
+		
+		
+		//Begin GBK parsing + insertion into BTree
+		try{
+			bTree = new BTree();
+			
+			GbkReader gbkReader = new GbkReader(new File(gbkFileName),seqLength);
+			gbkReader.prepareReader();
+
+		
+		}catch(FileNotFoundException e){
+			System.err.println("An error has occured opening the file: File not found");
+		}
 		
 		
 		
-		
-		
-		
-		
-		
+		//End GBK parsing + insertion into BTree
 		
 		
 	}
