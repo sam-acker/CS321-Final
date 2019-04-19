@@ -43,11 +43,13 @@ class GeneBankCreateBTree{
 			bTree = new BTree();
 			
 			GbkReader gbkReader = new GbkReader(new File(gbkFileName),seqLength);
-			gbkReader.prepareReader();
-
+			gbkReader.gotoOrigin();
+			gbkReader.fillGeneBuffer();
+			gbkReader.fillSeqBuffer();
 		
 		}catch(FileNotFoundException e){
 			System.err.println("An error has occured opening the file: File not found");
+			return;
 		}
 		
 		
