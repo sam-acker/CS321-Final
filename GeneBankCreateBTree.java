@@ -1,7 +1,7 @@
 import java.io.File;
 import java.io.FileNotFoundException;
 
-
+import java.util.concurrent.TimeUnit;
 class GeneBankCreateBTree{
 	
 	
@@ -43,9 +43,35 @@ class GeneBankCreateBTree{
 			bTree = new BTree();
 			
 			GbkReader gbkReader = new GbkReader(new File(gbkFileName),seqLength);
-			gbkReader.gotoOrigin();
-			gbkReader.fillGeneBuffer();
-			gbkReader.fillSeqBuffer();
+			
+			
+			//Begin sequence retrieval and insertion
+			while (gbkReader.gotoOrigin()){
+				gbkReader.fillGeneBuffer();
+				
+				while(gbkReader.fillSeqBuffer()){
+					
+					
+					//DEBUGGING PURPOSES
+					System.out.print("");
+					try{
+					TimeUnit.SECONDS.sleep(1);
+					}catch(Exception e){}
+					//DEBUGGING 
+					
+				}
+				
+				
+				
+				
+				
+				
+			}
+			
+			
+			
+			//gbkReader.fillGeneBuffer();
+			//gbkReader.fillSeqBuffer();
 		
 		}catch(FileNotFoundException e){
 			System.err.println("An error has occured opening the file: File not found");
