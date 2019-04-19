@@ -1,7 +1,15 @@
 import java.io.File;
 import java.io.FileNotFoundException;
 
-import java.util.concurrent.TimeUnit;
+/**
+This file creates a B Tree, accepts arguments, and runs a .gbk file parser
+
+STILL IN DEVELOPMENT
+
+
+@author Chris Bentley
+*/
+
 class GeneBankCreateBTree{
 	
 	
@@ -51,13 +59,16 @@ class GeneBankCreateBTree{
 				
 				while(gbkReader.fillSeqBuffer()){
 					
-					
-					//DEBUGGING PURPOSES
-					System.out.print("");
-					try{
-					TimeUnit.SECONDS.sleep(1);
-					}catch(Exception e){}
-					//DEBUGGING 
+					while (gbkReader.hasNext()){
+						
+						
+						//insert sequence into tree
+						
+						//gbkReader.nextSequence() WILL GO THROUGH EVERY POSSIBLE SEQ IN FILE
+						//USE IT TO INSERT INTO B TREE - MIGHT BE MADE INTO LONG FIRST
+						System.out.println(gbkReader.nextSequence());
+					}
+
 					
 				}
 				

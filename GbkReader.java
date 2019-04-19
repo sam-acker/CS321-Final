@@ -2,7 +2,13 @@ import java.util.Scanner;
 import java.io.File;
 import java.io.FileNotFoundException;
 
+/**
+This class parses .gbk files into sequences of desried length
 
+THIS FILE MAY RECIEVE FURTHER DEVELOPMENT IF NEEDED
+
+@author Chris Bentley
+*/
 
 class GbkReader{
 	
@@ -12,7 +18,7 @@ class GbkReader{
 	StringBuffer geneBuffer;
 	StringBuffer seqBuffer;
 	int seqBufferIndex=0;
-	
+	int seqIndex=0;
 	/**
 	This constructor creates the scanner for the file and establishes some class variables.
 	
@@ -72,6 +78,7 @@ class GbkReader{
 	
 	public boolean fillSeqBuffer(){
 		seqBuffer = new StringBuffer();
+		seqIndex=0;
 		int startIndex=seqBufferIndex;
 		if (seqBufferIndex==geneBuffer.length()){
 			return false;
@@ -91,23 +98,33 @@ class GbkReader{
 		if (seqBuffer.length()<seqLength){
 			return fillSeqBuffer();
 		}else{
-		System.out.print(seqBuffer.toString()+"\n");
+		//System.out.print(seqBuffer.toString()+"\n");
 		return true;
 		}
 	}
 	
+	/**
+	hasNext() will return true if there is one or more sequence left in the seqBuffer
 	
+	*/
 	
 	public boolean hasNext(){
-		return true; 
+		if ((seqBuffer.length()-(seqIndex+seqLength))>=seqLength){
+			return true;
+		}else{
+			return false;
+		}
 	}
 	
+	/**
+	nextSequence will output the next sequence of size seqLength
+	
+	*/
 	
 	
 	public String nextSequence(){
-		
-		
-		return null;
+		seqIndex++;
+		return seqBuffer.substring(seqIndex-1,seqIndex-1+seqLength);
 	}
 	
 	
