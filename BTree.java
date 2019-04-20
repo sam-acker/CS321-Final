@@ -1,9 +1,14 @@
+import java.util.LinkedList;
+import java.util.Queue;
 
 class BTree{
 	
-	BTreeNode root; //root
+	int degree;
+	BTreeNode root; //Root of Tree
+	Queue<BTreeNode> queue = new LinkedList<BTreeNode>();	//Queue for Searching
 	
-	public BTree() {
+	public BTree(int degree) {
+		this.degree = degree;
 		root = null;
 	}
 	
@@ -39,6 +44,31 @@ class BTree{
 
 		}
 		return root;
+	}
+	
+	//Returns number of times a specified DNA sequence occurs within the tree
+	int seqSearch(long key) {
+		if(root == null)
+			return -1;
+		
+		int retVal = 0;
+		
+		queue.clear();
+		queue.add(root);
+		while(!queue.isEmpty()) {
+			BTreeNode n = queue.remove();
+			
+			if(n.key == key) {
+				retVal++;
+			}
+			
+			if(n.left != null)
+				queue.add(n.left);
+			if(n.right != null)
+				queue.add(n.right);
+		}
+		
+		return retVal;
 	}
 	
 	
