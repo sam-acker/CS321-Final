@@ -43,16 +43,26 @@ class GeneBankCreateBTree{
 			System.err.println("Error; format should be following:\njava GeneBankCreateBTree <0/1(no/with Cache)> <degree> <gbk file> <sequence length> [<debug level>]");
 			return;
 		}
+		
+		if (seqLength>31||seqLength<1){
+			System.err.println("Error: Sequence length must be less than 31 and greater than 0");
+			return;
+			
+		}
+		
+		
+		
+		
 		//End arg parsing
 		
 		
 		//Begin GBK parsing + insertion into BTree
 		try{
-			bTree = new BTree();
+			//bTree = new BTree();
 			
 			GbkReader gbkReader = new GbkReader(new File(gbkFileName),seqLength);
-			
-			
+			//System.out.println(gbkReader.nextSequence());
+			//System.out.println("result above");
 			//Begin sequence retrieval and insertion
 			while (gbkReader.gotoOrigin()){
 				gbkReader.fillGeneBuffer();
@@ -98,6 +108,7 @@ class GeneBankCreateBTree{
 	
 	
 	
+
 	
 	
 	
