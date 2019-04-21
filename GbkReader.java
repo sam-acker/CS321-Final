@@ -1,7 +1,7 @@
 import java.util.Scanner;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.math.BigInteger;
+//import java.math.BigInteger;
 /**
 This class parses .gbk files into sequences of desried length
 
@@ -139,7 +139,8 @@ class GbkReader{
 		bpSeq=bpSeq.replaceAll("t","11");
 		bpSeq=bpSeq.replaceAll("c","01");
 		bpSeq=bpSeq.replaceAll("g","10");
-		return new BigInteger(bpSeq, 2).longValue(); 
+		//return new BigInteger(bpSeq, 2).longValue(); 
+		return Long.parseLong(bpSeq,2);
 		
 	}
 	
