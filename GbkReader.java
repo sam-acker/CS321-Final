@@ -121,14 +121,14 @@ class GbkReader{
 	
 	*/
 	
-	/*
+	
 	public String nextSequence(){
 		seqIndex++;
 		return seqBuffer.substring(seqIndex-1,seqIndex-1+seqLength);
 	}
-	*/
 	
 	
+	/*
 	//This method should output unique longs
 	
 	public long nextSequence(){
@@ -145,6 +145,6 @@ class GbkReader{
 	}
 	
 	
-	
+	*/
 	
 }
