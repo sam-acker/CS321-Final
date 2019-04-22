@@ -9,9 +9,7 @@ be neccesary anyways for the BTree project.
 CS321 HW1
 CHRIS BENTLEY
  */
->>>>>>>  changes to cache and treeobject
 
-*/
 
 
 class Cache < T > {

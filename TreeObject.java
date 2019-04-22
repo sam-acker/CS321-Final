@@ -10,26 +10,7 @@ class TreeObject{
 	
 	private long key; //This is the sequence in long format
 	private int frequency; //This is the frequency of the key
-	
-<<<<<<< HEAD
-	/**
-	Constructor
-	
-	*/
-	
-	public TreeObject(long key){
-		this.key=key;
-		frequency=1;
-	}
-	/**
-	Increment the frequency for when duplicates show up
-	*/
-	public void increaseFrequency(){
-		frequency++;
-	}
-	
-	
-=======
+
 	 TreeObject(long key, int frequency) {
 		this.key = key;
 		this.frequency = frequency;
@@ -47,6 +28,6 @@ class TreeObject{
 	public int frequency() {
 		return frequeny
 	}
->>>>>>>  changes to cache and treeobject
+
 	
 }
