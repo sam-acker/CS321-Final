@@ -1,7 +1,6 @@
 import java.util.Scanner;
 import java.io.File;
 import java.io.FileNotFoundException;
-//import java.math.BigInteger;
 /**
 This class parses .gbk files into sequences of desried length
 
@@ -19,6 +18,7 @@ class GbkReader{
 	StringBuffer seqBuffer;
 	int seqBufferIndex=0;
 	int seqIndex=0;
+	GeneUtility util;
 	/**
 	This constructor creates the scanner for the file and establishes some class variables.
 	
@@ -28,6 +28,7 @@ class GbkReader{
 		this.file=file;
 		this.seqLength=seqLength;
 		reader = new Scanner(file);
+		util=new GeneUtility();
 	}
 	
 	/**
@@ -121,30 +122,30 @@ class GbkReader{
 	
 	*/
 	
-	
+	/*
 	public String nextSequence(){
 		seqIndex++;
 		return seqBuffer.substring(seqIndex-1,seqIndex-1+seqLength);
 	}
 	
+	*/
 	
-	/*
 	//This method should output unique longs
 	
 	public long nextSequence(){
 		seqIndex++;
 		String bpSeq=seqBuffer.substring(seqIndex-1,seqIndex-1+seqLength);
+		return util.sequenceToLong(bpSeq);
 		//String bpSeq="ATCGATCGATCGATCG";
-		bpSeq=bpSeq.replaceAll("a","00");
-		bpSeq=bpSeq.replaceAll("t","11");
-		bpSeq=bpSeq.replaceAll("c","01");
-		bpSeq=bpSeq.replaceAll("g","10");
-		//return new BigInteger(bpSeq, 2).longValue(); 
-		return Long.parseLong(bpSeq,2);
+		//bpSeq=bpSeq.replaceAll("a","00");
+		//bpSeq=bpSeq.replaceAll("t","11");
+		//bpSeq=bpSeq.replaceAll("c","01");
+		//bpSeq=bpSeq.replaceAll("g","10");
+		//return Long.parseLong(bpSeq,2);
 		
 	}
 	
 	
-	*/
+	
 	
 }
