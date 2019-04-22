@@ -28,7 +28,7 @@ class TreeObject{
 	}
 	
 	public int frequency() {
-		return frequeny
+		return frequency;
 	}
 
 	
