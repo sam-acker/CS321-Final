@@ -51,7 +51,6 @@ class Cache < T > {
 
 
 	public void getHitRate() {
-		cacheList.get
 	}
 
 	public void getMissRate() {
