@@ -1,4 +1,3 @@
-
 /**
 This class will provide some useful tools
 
@@ -14,12 +13,7 @@ class GeneUtility{
 	
 	*/
 	
-	public GeneUtility(){
-		
-		
-		
-		
-	}
+	public GeneUtility(){}
 	
 	
 	/**
@@ -32,6 +26,7 @@ class GeneUtility{
 		sequence=sequence.replaceAll("t","11");
 		sequence=sequence.replaceAll("c","01");
 		sequence=sequence.replaceAll("g","10");
+		System.out.println(sequence);
 		try{
 			return Long.parseLong(sequence,2);//cvt from base 2
 		}catch(Exception e){
@@ -45,13 +40,37 @@ class GeneUtility{
 	
 	*/
 	
-	public String longToSequence(long number){
+	public String longToSequence(long number,int seqSize){
 		String sequence=Long.toString(number,2); //cvt to base 2
-		sequence=sequence.replaceAll("00","a");
-		sequence=sequence.replaceAll("11","t");
-		sequence=sequence.replaceAll("01","c");
-		sequence=sequence.replaceAll("10","g");
-		return sequence;
+		int j=seqSize-sequence.length();
+		String adder="";
+		while (j>0){
+			adder+="0";
+			j--;
+		}
+		sequence=adder+sequence;
+		StringBuffer buff= new StringBuffer();
+		int i=2;
+		while(i<=sequence.length()){
+			String temp=sequence.substring(i-2,i);
+			switch(temp){
+				
+				case "00":
+				buff.append("a");
+				break;
+				case "11":
+				buff.append("t");
+				break;
+				case "01":
+				buff.append("c");
+				break;
+				case "10":
+				buff.append("g");
+				break;	
+			}
+			i+=2;
+		}
+		return buff.toString();
 	}
 	
 	
