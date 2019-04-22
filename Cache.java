@@ -1,10 +1,10 @@
 import java.util.LinkedList;
 
-/*
-CS321 HW1
-CHRIS BENTLEY
-*/
+/**
+Idk how right this was to start with, but quite a few modifications will
+be neccesary anyways for the BTree project. 
 
+*/
 
 
 class Cache < T > {
