@@ -3,7 +3,7 @@
 /**
 This class will be a single 'object' in a BTreeNode.
 
-@author
+@author Big ben
 */
 
 class TreeObject{
