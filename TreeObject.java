@@ -11,15 +11,17 @@ class TreeObject{
 	private long key; //This is the sequence in long format
 	private int frequency; //This is the frequency of the key
 
-	 TreeObject(long key, int frequency) {
+	 public TreeObject(long key, int frequency) {
 		this.key = key;
 		this.frequency = frequency;
 	}
 	
-	 TreeObject(long key) {
+	 public TreeObject(long key) {
 		this.key = key; 
-		this.frequency = 1;
+		frequency = 1;
 	}
+	
+	
 	
 	public long getKey() {
 		return key;
