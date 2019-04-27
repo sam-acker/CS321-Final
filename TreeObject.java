@@ -21,22 +21,28 @@ class TreeObject implements Comparable<TreeObject> {
 		frequency = 1;
 	}
 	
+	 public void increaseFrequency() {
+			frequency ++;
+		}
+	 
+	 public int returnFrequency() {
+		 return frequency;
+	 }
 	
-	
-	public long getKey() {
+	public long returnKey() {
 		return key;
 	}
 	
-	public void increaseFrequency() {
-		frequency ++;
-	}
-	
-	public int frequency() {
-		return frequency;
-	}
 	public int compareTo(TreeObject x) {
-		
-				}
-
+		if(this.key > x.key ) {
+			return 1;
+			else if (this.key <x.key)
+				return -1;
+			else 
+				return 0;
+	}
+		public String toString() {
+			
+		}
 	
 }
