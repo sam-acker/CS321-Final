@@ -1,4 +1,4 @@
-import java.util.LinkedList;
+
 
 /**
 BTree class
@@ -7,7 +7,7 @@ BTree class
 */
 class BTree{
 	
-	
+	private int seqLength;
 	
 	
 	/**
@@ -20,24 +20,23 @@ class BTree{
 	class BTreeNode{
 		
 		private boolean root;
-		
+		private int parentIndex;
+		private int index;
 		//KEYS
-		LinkedList<TreeObject> keys;
+		private TreeObject[] keys;
 		
 		//CHILDREN
-		LinkedList<Integer> children;
-		
-		
+		private int[] children;
 		
 		/**
 		Constructor
 		
 		*/
 		
-		public BTreeNode(){
-			
-			
-			
+		public BTreeNode(int degree,int index){
+			this.index=index;
+			children=new int[2 * degree - 1];
+			keys=new TreeObject[2 * degree - 1];
 		}
 		
 		/**
@@ -58,8 +57,8 @@ class BTree{
 	
 	
 	*/
-	public BTree(){
-		
+	public BTree(int seqLength){
+		this.seqLength=seqLength;
 		
 		
 		
@@ -104,7 +103,6 @@ class BTree{
 		
 		
 	}
-	
 	
 	
 	

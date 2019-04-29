@@ -8,8 +8,8 @@ This class will be a single 'object' in a BTreeNode.
 
 class TreeObject implements Comparable<TreeObject> {
 	
-	private long key; //This is the sequence in long format
-	private int frequency; //This is the frequency of the key
+	private long key; //This is the sequence in long format //8 BYTES
+	private int frequency; //This is the frequency of the key //4 BYTES
 
 	 public TreeObject(long key, int frequency) {
 		this.key = key;

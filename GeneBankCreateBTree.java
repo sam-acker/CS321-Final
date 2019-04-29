@@ -54,7 +54,7 @@ class GeneBankCreateBTree{
 			
 			
 		}
-
+		//System.out.println(degree);
 
 
 
@@ -63,8 +63,8 @@ class GeneBankCreateBTree{
 
 		//Begin GBK parsing + insertion into BTree
 		try{
-			//bTree = new BTree();
-
+			bTree = new BTree(seqLength);
+			
 			GbkReader gbkReader = new GbkReader(new File(gbkFileName),seqLength);
 			//System.out.println(gbkReader.nextSequence());
 			//System.out.println("result above");
@@ -111,23 +111,36 @@ class GeneBankCreateBTree{
 
 	}
 
+
+
 	/**
 	Find optimum degree of BTree based on metadata sizes
 			
 			BTREENODE X
-	|   meta data: parentNode
-	|	KEYS
-	|	CHILDREN
+	|   meta data: parentNode 4 BYTES
+	|	KEYS 12 BYTES EACH
+	|	CHILDREN 4 BYTES EACH
 	
 	
-	THIS CANT BE COMPLETED UNTIL BTREENODE IS COMPLETED
 	
 	*/
-	public static int optimumDegree(int blockSize){
+	
+		public static int optimumDegree(int blockSize){
+		// UNITS IN BYTES // AN INT IS 4 BYTES // LONG 8 BYTES
+		int deg=1;
+		int metaSize=4;
+		int dataSize=0;
+		int keyCount=2 * deg - 1;
 		
+		while ((metaSize+dataSize)<blockSize){
+			deg++;
+			keyCount=2 * deg - 1;
+						//12 FOR TREEOBJECT	4 FOR EACH CHILD
+			dataSize=(keyCount*12)+((keyCount+1)*4);
+			//System.out.println("DATA SIZE FOR D "+deg+" IS "+dataSize);
+		}
 		
-		
-		return 0;
+		return deg;
 		
 		
 		

@@ -26,7 +26,7 @@ class GeneUtility{
 		sequence=sequence.replaceAll("t","11");
 		sequence=sequence.replaceAll("c","01");
 		sequence=sequence.replaceAll("g","10");
-		System.out.println(sequence);
+		//System.out.println(sequence);
 		try{
 			return Long.parseLong(sequence,2);//cvt from base 2
 		}catch(Exception e){
