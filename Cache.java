@@ -1,6 +1,5 @@
 import java.util.LinkedList;
 
-<<<<<<< HEAD
 /**
 Idk how right this was to start with, but quite a few modifications will
 be neccesary anyways for the BTree project. 
@@ -39,8 +38,8 @@ class Cache < T > {
 		cacheList.remove(obj);
 	}
 
-	public void removeLast(T obj) {
-		cacheList.removeLast(obj);
+	public void removeLast() {
+		cacheList.removeLast();
 	}
 
 	public void clearCache() {

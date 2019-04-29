@@ -49,6 +49,11 @@ class GeneBankCreateBTree{
 			return;
 
 		}
+		if (degree==0){
+			degree=optimumDegree(4096);
+			
+			
+		}
 
 
 
@@ -106,6 +111,28 @@ class GeneBankCreateBTree{
 
 	}
 
+	/**
+	Find optimum degree of BTree based on metadata sizes
+			
+			BTREENODE X
+	|   meta data: parentNode
+	|	KEYS
+	|	CHILDREN
+	
+	
+	THIS CANT BE COMPLETED UNTIL BTREENODE IS COMPLETED
+	
+	*/
+	public static int optimumDegree(int blockSize){
+		
+		
+		
+		return 0;
+		
+		
+		
+		
+	}
 
 
 

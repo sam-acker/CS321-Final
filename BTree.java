@@ -1,4 +1,4 @@
-
+import java.util.LinkedList;
 
 /**
 BTree class
@@ -13,11 +13,20 @@ class BTree{
 	/**
 	
 	Node class
-	
+	BECAUSE THIS IS A NESTED CLASS, WE CAN KEEP THE VARIABLES PRIVATE BUT STILL DIRECTLY MANIPULATE THEM FROM THIS CLASS
 	
 	*/
 	
 	class BTreeNode{
+		
+		private boolean root;
+		
+		//KEYS
+		LinkedList<TreeObject> keys;
+		
+		//CHILDREN
+		LinkedList<Integer> children;
+		
 		
 		
 		/**

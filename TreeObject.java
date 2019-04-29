@@ -36,13 +36,13 @@ class TreeObject implements Comparable<TreeObject> {
 	public int compareTo(TreeObject x) {
 		if(this.key > x.key ) {
 			return 1;
-			else if (this.key <x.key)
+		}else if (this.key <x.key){
 				return -1;
-			else 
+	}else 
 				return 0;
 	}
 		public String toString() {
-			
+			return null;
 		}
 	
 }
