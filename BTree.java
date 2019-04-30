@@ -35,19 +35,44 @@ class BTree{
 		
 		public BTreeNode(int degree,int index){
 			this.index=index;
-			children=new int[(2 * degree - 1)+1];
+			children=new int[numKeys+1];
 			
 			for (int i=0;i<children.length;i++){
 				children[i]=-1;
 			}
 			
-			keys=new TreeObject[2 * degree - 1];
+			keys=new TreeObject[numKeys];
 			
 			for (int j=0;j<keys.length;j++){
 				keys[j]=new TreeObject();
 			}
 			
 		}
+		
+		/**
+		Reconstruct a B Tree Node from disk for searching
+		I have not tested this method yet
+		*/
+		
+		public BTreeNode(byte[] data,int index){
+			this.index=index;
+			ByteBuffer bb = ByteBuffer.allocate(data.length);
+			//READ META DATA
+			parentIndex=bb.getInt(0);
+			//READ KEY DATA
+			for (int i=0;i<numKeys;i++){
+				keys[i]=new TreeObject(bb.getLong((i*12)+4),bb.getInt((i*12)+12));
+				// 0M4K12F16K24F28
+			}
+			int nIndex=4+(12*numKeys);
+			//READ CHILDREN DATA
+			for (int j=0;j<numKeys+1;j++){
+				children[j]=bb.getInt((4*j)+nIndex);
+			}
+		}
+		
+		
+		
 		
 		/**
 		returns true if full, false if not full
