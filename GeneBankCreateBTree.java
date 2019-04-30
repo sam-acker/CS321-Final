@@ -1,6 +1,5 @@
 import java.io.File;
 import java.io.FileNotFoundException;
-
 /**
 This file creates a B Tree, accepts arguments, and runs a .gbk file parser
 
@@ -81,7 +80,8 @@ class GeneBankCreateBTree{
 
 						//gbkReader.nextSequence() WILL GO THROUGH EVERY POSSIBLE SEQ IN FILE
 						//USE IT TO INSERT INTO B TREE - MIGHT BE MADE INTO LONG FIRST
-						System.out.println(gbkReader.nextSequence());
+						gbkReader.nextSequence();
+						//System.out.println(gbkReader.nextSequence());
 					}
 
 
@@ -104,7 +104,7 @@ class GeneBankCreateBTree{
 			return;
 		}
 
-
+		System.out.println("DONE");
 
 		//End GBK parsing + insertion into BTree
 

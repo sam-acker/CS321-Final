@@ -4,7 +4,7 @@ import java.io.FileNotFoundException;
 /**
 This class will write our .data.[k].t files / interface with the file
 
-
+TODO: throw exceptions instead of catching here
 */
 
 
@@ -63,9 +63,14 @@ class TFileWriter{
 	BTREENODE WILL REQUIRE AN INTERNAL CLASS TO PASS TO HERE
 	*/
 	
-	public void writeData(){
-		
-		
+	public void writeData(byte[] data,int nodeOffset){
+		try{
+		RAFile.seek(nodeOffset);
+		RAFile.write(data);
+		}catch(IOException e){
+			System.err.println("ERROR: An unexpected IO error has occured");
+			return;
+		}
 	}
 	
 	/**
@@ -83,7 +88,7 @@ class TFileWriter{
 	*/
 	public void writeBOFMetaData(int seqLength, int deg, int rootByteOffset){
 		try{
-		RAFile.seek(0l);
+		RAFile.seek(0);
 		RAFile.writeInt(seqLength);
 		RAFile.writeInt(deg);
 		RAFile.writeInt(rootByteOffset);
@@ -97,15 +102,34 @@ class TFileWriter{
 	
 	
 	
+	
+	
 	/**
 	Read from file
 	
 	*/
 	
-	public void readData(){
+	public byte[] readNodeData(int nodeOffset){
 		
 		
-		
+		return new byte[4096];
+	}
+	
+	
+	/**
+	Returns the meta data in an array
+	[0]= sequence length
+	[1]= degree
+	[2]= root byte offset
+	
+	*/
+	public int[] readBOFMetaData() throws IOException {
+		RAFile.seek(0);
+		int[] mdata=new int[3];
+		mdata[0]=RAFile.readInt();
+		mdata[1]=RAFile.readInt();
+		mdata[2]=RAFile.readInt();
+		return mdata;
 	}
 	
 	
