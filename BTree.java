@@ -1,5 +1,5 @@
 import java.nio.ByteBuffer;
-
+import java.util.ArrayList;
 /**
 BTree class
 
@@ -21,12 +21,12 @@ class BTree{
 		
 		//private boolean root; //if parentIndex==null we can assume root?
 		private int parentIndex,index;
-		//KEYS -- WE MAY WANT TO REPLACE THESE WITH ARRAY LISTS
+		//KEYS 
 		
-		private TreeObject[] keys;
+		private ArrayList<TreeObject> keys;
 		
-		//CHILDREN -- WE MAY WANT TO REPLACE THESE WITH ARRAY LISTS
-		private int[] children;
+		//CHILDREN 
+		private ArrayList<Integer> children;
 		
 		/**
 		Constructor
@@ -35,17 +35,17 @@ class BTree{
 		
 		public BTreeNode(int degree,int index){
 			this.index=index;
-			children=new int[numKeys+1];
+			//children=new int[numKeys+1];
+			children=new ArrayList<Integer>(numKeys+1);
+			//for (int i=0;i<children.length;i++){
+			//	children[i]=-1;
+			//}
 			
-			for (int i=0;i<children.length;i++){
-				children[i]=-1;
-			}
-			
-			keys=new TreeObject[numKeys];
-			
-			for (int j=0;j<keys.length;j++){
-				keys[j]=new TreeObject();
-			}
+			//keys=new TreeObject[numKeys];
+			keys=new ArrayList<TreeObject>(numKeys);
+			//for (int j=0;j<keys.length;j++){
+			//	keys[j]=new TreeObject();
+			//}
 			
 		}
 		
@@ -61,13 +61,13 @@ class BTree{
 			parentIndex=bb.getInt(0);
 			//READ KEY DATA
 			for (int i=0;i<numKeys;i++){
-				keys[i]=new TreeObject(bb.getLong((i*12)+4),bb.getInt((i*12)+12));
+				//keys[i]=new TreeObject(bb.getLong((i*12)+4),bb.getInt((i*12)+12));
 				// 0M4K12F16K24F28
 			}
 			int nIndex=4+(12*numKeys);
 			//READ CHILDREN DATA
 			for (int j=0;j<numKeys+1;j++){
-				children[j]=bb.getInt((4*j)+nIndex);
+				//children[j]=bb.getInt((4*j)+nIndex);
 			}
 		}
 		
@@ -100,20 +100,36 @@ class BTree{
 			bb.putInt(parentIndex);
 			
 			//ADD KEYS
-			for (int i=0;i<keys.length;i++){
-				bb.putLong(keys[i].returnKey());
-				bb.putInt(keys[i].returnFrequency());
+			for (int i=0;i<keys.size();i++){
+				bb.putLong(keys.get(i).returnKey());
+				bb.putInt(keys.get(i).returnFrequency());
+			}
+			for (int i=0;i<(numKeys-keys.size());i++){
+				bb.putLong(-1l); //invalid keys to represent empty slots
+				bb.putInt(-1);
+			}
+			
+			
+			
+			//ADD CHILDREN
+			for (int i=0;i<children.size();i++){
+				//try{
+				bb.putInt(children.get(i));
+				
+				//}catch(Exception e){
+					//System.out.println("FATAL:\nKEYS SIZE: "+keys.length+"\nCHILDREN SIZE: "+children.length+"\nAT J= "+j);
+
+				//}
+				
 				
 			}
-			//ADD CHILDREN
-			for (int j=0;j<children.length;j++){
-				try{
-				bb.putInt(children[j]);
-				}catch(Exception e){
-					System.out.println("FATAL:\nKEYS SIZE: "+keys.length+"\nCHILDREN SIZE: "+children.length+"\nAT J= "+j);
-
-				}
+			for (int i=0;i<((numKeys+1)-children.size());i++){
+				bb.putInt(-1);
+				
 			}
+			
+			
+			
 			System.out.println(bb.toString());
 			//return bb;
 			return bb.array();

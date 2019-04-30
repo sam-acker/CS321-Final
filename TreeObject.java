@@ -24,13 +24,13 @@ class TreeObject implements Comparable<TreeObject> {
 	/**
 	This will represent an EMPTY tree object
 	this makes the tobyte method of btreenode more effecient
-	*/
+	MIGHT BE DELETED USING ARRAYLISTS
 	
 	 public TreeObject() {
 		this.key = -1L; 
 		frequency = -1;
 	}
-	
+	*/
 	 public void increaseFrequency() {
 			frequency ++;
 		}
