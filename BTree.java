@@ -1,4 +1,4 @@
-
+import java.nio.ByteBuffer;
 
 /**
 BTree class
@@ -7,7 +7,7 @@ BTree class
 */
 class BTree{
 	
-	private int seqLength;
+	private int seqLength,degree,numKeys,blockSize;
 	
 	
 	/**
@@ -19,9 +19,8 @@ class BTree{
 	
 	class BTreeNode{
 		
-		private boolean root;
-		private int parentIndex;
-		private int index;
+		//private boolean root; //if parentIndex==null we can assume root?
+		private int parentIndex,index;
 		//KEYS
 		private TreeObject[] keys;
 		
@@ -47,13 +46,33 @@ class BTree{
 			return false;
 		}
 		
+		
 		/**
 		Converts itself into a byte[4096]
 		will be passed into TFileWriter for writing to file
 		*/
 		public byte[] toByte(){
+			//byte[] newData=new byte[4096]
+			ByteBuffer bb= ByteBuffer.allocate(4096);
 			
-			return new byte[4096];
+			//ADD METADATA
+			bb.putInt(parentIndex);
+			
+			//ADD KEYS
+			for (int i=0;i<keys.length;i++){
+				bb.putLong(keys[i].returnKey());
+				bb.putInt(keys[i].returnFrequency());
+				
+			}
+			
+			//ADD CHILDREN
+			for (int j=0;j<children.length;j++){
+				bb.putInt(children[j]);
+				
+				
+			}
+			
+			return bb.array();
 		}
 		
 		
@@ -66,10 +85,11 @@ class BTree{
 	
 	
 	*/
-	public BTree(int seqLength){
+	public BTree(int seqLength,int degree,int blockSize){
 		this.seqLength=seqLength;
-		
-		
+		this.degree=degree;
+		this.blockSize=blockSize;
+		numKeys=2*degree-1;
 		
 	}
 	

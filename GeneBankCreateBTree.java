@@ -13,6 +13,7 @@ class GeneBankCreateBTree{
 
 
 	private static BTree bTree;
+	private static final int BLOCK_SIZE=4096; //BYTES
 
 	/**
 
@@ -26,6 +27,8 @@ class GeneBankCreateBTree{
 		int seqLength=0;
 		String gbkFileName=" ";
 		boolean useCache=false;
+		
+		
 
 		//Parse arg input 
 		try{
@@ -49,7 +52,7 @@ class GeneBankCreateBTree{
 
 		}
 		if (degree==0){
-			degree=optimumDegree(4096);
+			degree=optimumDegree(BLOCK_SIZE);
 			
 			
 		}
@@ -62,7 +65,7 @@ class GeneBankCreateBTree{
 
 		//Begin GBK parsing + insertion into BTree
 		try{
-			bTree = new BTree(seqLength);
+			bTree = new BTree(seqLength,degree,BLOCK_SIZE);
 			
 			GbkReader gbkReader = new GbkReader(new File(gbkFileName),seqLength);
 			//System.out.println(gbkReader.nextSequence());
@@ -130,11 +133,11 @@ class GeneBankCreateBTree{
 		int deg=1;
 		int metaSize=4;
 		int dataSize=0;
-		int keyCount=2 * deg - 1;
+		int keyCount=2*deg-1;
 		
 		while ((metaSize+dataSize)<blockSize){
 			deg++;
-			keyCount=2 * deg - 1;
+			keyCount=2*deg-1;
 						//12 FOR TREEOBJECT	4 FOR EACH CHILD
 			dataSize=(keyCount*12)+((keyCount+1)*4);
 			//System.out.println("DATA SIZE FOR D "+deg+" IS "+dataSize);
