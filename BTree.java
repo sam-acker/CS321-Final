@@ -47,6 +47,15 @@ class BTree{
 			return false;
 		}
 		
+		/**
+		Converts itself into a byte[4096]
+		will be passed into TFileWriter for writing to file
+		*/
+		public byte[] toByte(){
+			
+			return new byte[4096];
+		}
+		
 		
 	}
 	
