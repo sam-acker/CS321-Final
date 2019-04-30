@@ -61,13 +61,13 @@ class BTree{
 			parentIndex=bb.getInt(0);
 			//READ KEY DATA
 			for (int i=0;i<numKeys;i++){
-				//keys[i]=new TreeObject(bb.getLong((i*12)+4),bb.getInt((i*12)+12));
+				keys.add(new TreeObject(bb.getLong((i*12)+4),bb.getInt((i*12)+12)));
 				// 0M4K12F16K24F28
 			}
 			int nIndex=4+(12*numKeys);
 			//READ CHILDREN DATA
 			for (int j=0;j<numKeys+1;j++){
-				//children[j]=bb.getInt((4*j)+nIndex);
+				children.add(bb.getInt((4*j)+nIndex));
 			}
 		}
 		
