@@ -21,10 +21,11 @@ class BTree{
 		
 		//private boolean root; //if parentIndex==null we can assume root?
 		private int parentIndex,index;
-		//KEYS
+		//KEYS -- WE MAY WANT TO REPLACE THESE WITH ARRAY LISTS
+		
 		private TreeObject[] keys;
 		
-		//CHILDREN
+		//CHILDREN -- WE MAY WANT TO REPLACE THESE WITH ARRAY LISTS
 		private int[] children;
 		
 		/**
@@ -34,8 +35,18 @@ class BTree{
 		
 		public BTreeNode(int degree,int index){
 			this.index=index;
-			children=new int[2 * degree - 1];
+			children=new int[(2 * degree - 1)+1];
+			
+			for (int i=0;i<children.length;i++){
+				children[i]=-1;
+			}
+			
 			keys=new TreeObject[2 * degree - 1];
+			
+			for (int j=0;j<keys.length;j++){
+				keys[j]=new TreeObject();
+			}
+			
 		}
 		
 		/**
@@ -52,10 +63,15 @@ class BTree{
 		will be passed into TFileWriter for writing to file
 		*/
 		public byte[] toByte(){
+			//public ByteBuffer toByte(){
 			//byte[] newData=new byte[4096]
-			ByteBuffer bb= ByteBuffer.allocate(4096);
+			ByteBuffer bb= ByteBuffer.allocate(blockSize);
 			
 			//ADD METADATA
+			
+			//TEST
+			//parentIndex=69;
+			//
 			bb.putInt(parentIndex);
 			
 			//ADD KEYS
@@ -64,14 +80,17 @@ class BTree{
 				bb.putInt(keys[i].returnFrequency());
 				
 			}
-			
 			//ADD CHILDREN
 			for (int j=0;j<children.length;j++){
+				try{
 				bb.putInt(children[j]);
-				
-				
+				}catch(Exception e){
+					System.out.println("FATAL:\nKEYS SIZE: "+keys.length+"\nCHILDREN SIZE: "+children.length+"\nAT J= "+j);
+
+				}
 			}
-			
+			System.out.println(bb.toString());
+			//return bb;
 			return bb.array();
 		}
 		
@@ -91,6 +110,17 @@ class BTree{
 		this.blockSize=blockSize;
 		numKeys=2*degree-1;
 		
+		
+		
+		
+		/*
+		//TEST CODE APPEARS TO WORK WELL
+		BTreeNode dummy= new BTreeNode(degree,13);
+		ByteBuffer nt=dummy.toByte();
+		System.out.println(nt.getInt(0));
+		System.out.println(nt.getLong(4));
+		//
+		*/
 	}
 	
 	/**

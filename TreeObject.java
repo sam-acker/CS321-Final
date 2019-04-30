@@ -21,6 +21,16 @@ class TreeObject implements Comparable<TreeObject> {
 		frequency = 1;
 	}
 	
+	/**
+	This will represent an EMPTY tree object
+	this makes the tobyte method of btreenode more effecient
+	*/
+	
+	 public TreeObject() {
+		this.key = -1L; 
+		frequency = -1;
+	}
+	
 	 public void increaseFrequency() {
 			frequency ++;
 		}
