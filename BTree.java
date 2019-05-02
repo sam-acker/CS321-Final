@@ -145,7 +145,7 @@ class BTree{
 	
 	
 	*/
-	public BTree(int seqLength,int degree,int blockSize){
+	public BTree(int seqLength,int degree,int blockSize,int cacheSize){
 		this.seqLength=seqLength;
 		this.degree=degree;
 		this.blockSize=blockSize;

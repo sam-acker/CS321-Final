@@ -18,6 +18,13 @@ class GeneBankCreateBTree{
 	/**
 
 	java GeneBankCreateBTree <0/1(no/with Cache)> <degree> <gbk file> <sequence length> [<debug level>]
+	
+	IF CACHE is true
+	
+	java GeneBankCreateBTree <0/1(no/with Cache)> <degree> <gbk file> <sequence length>
+	<cache size> [<debug level>]
+
+	
 
 	 */	
 	public static void main(String... Args){
@@ -25,6 +32,7 @@ class GeneBankCreateBTree{
 		int degree=0;
 		int debugLevel=0;
 		int seqLength=0;
+		int cacheSize=0;
 		String gbkFileName=" ";
 		boolean useCache=false;
 		
@@ -38,9 +46,17 @@ class GeneBankCreateBTree{
 			if (Args[0]=="1"){
 				useCache=true;
 			}
-			if (Args.length==5){
+			if (Args.length==5&&useCache==false){
 				debugLevel=Integer.parseInt(Args[4]);
 			}
+			
+			if (useCache==true){
+				cacheSize=Args[4]
+				if (Args.length==6){
+				debugLevel=Integer.parseInt(Args[5]);
+				}
+			}
+			
 		}catch(Exception e){
 			System.err.println("Error; format should be following:\njava GeneBankCreateBTree <0/1(no/with Cache)> <degree> <gbk file> <sequence length> [<debug level>]");
 			return;
@@ -56,6 +72,11 @@ class GeneBankCreateBTree{
 			
 			
 		}
+		
+		if (useCache==false){
+			cacheSize=-1;
+		}
+		
 		//System.out.println(degree);
 
 
@@ -65,8 +86,9 @@ class GeneBankCreateBTree{
 
 		//Begin GBK parsing + insertion into BTree
 		try{
-			bTree = new BTree(seqLength,degree,BLOCK_SIZE);
 			
+			
+			bTree = new BTree(seqLength,degree,BLOCK_SIZE,cacheSize);
 			
 			
 			GbkReader gbkReader = new GbkReader(new File(gbkFileName),seqLength);
