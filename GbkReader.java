@@ -1,48 +1,51 @@
 import java.util.Scanner;
 import java.io.File;
 import java.io.FileNotFoundException;
+
 /**
 This class parses .gbk files into sequences of desried length
-
-THIS FILE MAY RECIEVE FURTHER DEVELOPMENT IF NEEDED
 
 @author Chris Bentley
 */
 
-class GbkReader{
-	
+class GbkReader {
+
 	Scanner reader;
 	File file;
 	int seqLength;
 	StringBuffer geneBuffer;
 	StringBuffer seqBuffer;
-	int seqBufferIndex=0;
-	int seqIndex=0;
+	int seqBufferIndex = 0;
+	int seqIndex = 0;
 	GeneUtility util;
+	
 	/**
 	This constructor creates the scanner for the file and establishes some class variables.
 	
+	@param file - The .gbk file to process
+	@param seqLength - Length of sequence to process
 	*/
-	
-	public GbkReader(File file, int seqLength)throws FileNotFoundException{
-		this.file=file;
-		this.seqLength=seqLength;
+
+	public GbkReader(File file, int seqLength) throws FileNotFoundException {
+		this.file = file;
+		this.seqLength = seqLength;
 		reader = new Scanner(file);
-		util=new GeneUtility();
+		util = new GeneUtility();
 	}
-	
+
 	/**
 	gotoOrigin will simply move the scanner to the next ORIGIN in the gpk file,
 	if there is none, then it will return false (instead of true.) 
 	
+	@return boolean representing if it has found and moved to an origin
+	
 	*/
 	public boolean gotoOrigin() {
-		
 		//Look for origin
-		while(reader.findInLine("ORIGIN")==null){
-			if (reader.hasNextLine()){
+		while (reader.findInLine("ORIGIN") == null) {
+			if (reader.hasNextLine()) {
 				reader.nextLine();
-			}else{
+			} else {
 				return false;
 			}
 		}
@@ -53,99 +56,81 @@ class GbkReader{
 	a stringbuffer. This is done for easy substringing from null base pair values.
 	There is no return state because this will only be called once per gotoOrigin
 	*/
-	
-	public void fillGeneBuffer(){
+
+	public void fillGeneBuffer() {
 		//Buffer the next string sequence (origin-//)
-		seqBufferIndex=0;
+		seqBufferIndex = 0;
 		geneBuffer = new StringBuffer();
-		String newLine="";
-		while(reader.findInLine("//")==null){
-			newLine=reader.nextLine();
+		String newLine = "";
+		while (reader.findInLine("//") == null) {
+			newLine = reader.nextLine();
 			//remove the line numbers
-			newLine=newLine.replaceAll("[0-9]","");
-			newLine=newLine.replaceAll(" ","");
+			newLine = newLine.replaceAll("[0-9]", "");
+			newLine = newLine.replaceAll(" ", "");
 			//add to buffer
 			geneBuffer.append(newLine);
 		}
 	}
-	
+
 	/**
 	fillSeqBuffer will segment the gene buffer into chunks between null base pair values,
 	one at a time into a stringbuffer. 
 	True will be returned if any new bases are added, and false if the gene buffer has 
 	already been iterated.
 	
-	*/
+	@return boolean representing if there are more bases in gene buffer to process
 	
-	public boolean fillSeqBuffer(){
+	*/
+
+	public boolean fillSeqBuffer() {
 		seqBuffer = new StringBuffer();
-		seqIndex=0;
-		int startIndex=seqBufferIndex;
-		if (seqBufferIndex==geneBuffer.length()){
+		seqIndex = 0;
+		int startIndex = seqBufferIndex;
+		if (seqBufferIndex == geneBuffer.length()) {
 			return false;
 		}
-		seqBufferIndex=geneBuffer.indexOf("n",seqBufferIndex);
-		//System.out.println(seqBufferIndex+"\n");
-		if (seqBufferIndex==-1){
+		seqBufferIndex = geneBuffer.indexOf("n", seqBufferIndex);
+		if (seqBufferIndex == -1) {
 			//No null bases detected in this gene
-			seqBufferIndex=geneBuffer.length();
+			seqBufferIndex = geneBuffer.length();
 		}
-		if (startIndex==seqBufferIndex){
+		if (startIndex == seqBufferIndex) {
 			seqBufferIndex++;
-		}else{
-			seqBuffer.append(geneBuffer.substring(startIndex,seqBufferIndex));
+		} else {
+			seqBuffer.append(geneBuffer.substring(startIndex, seqBufferIndex));
 		}
 		// r e c u r s i o n
-		if (seqBuffer.length()<seqLength){
+		if (seqBuffer.length() < seqLength) {
 			return fillSeqBuffer();
-		}else{
-		//System.out.print(seqBuffer.toString()+"\n");
-		return true;
+		} else {
+			return true;
 		}
 	}
-	
+
 	/**
 	hasNext() will return true if there is one or more sequence left in the seqBuffer
 	
+	@return boolean representing if there is another sequence in the seqBuffer
 	*/
-	
-	public boolean hasNext(){
-		if ((seqBuffer.length()-(seqIndex+seqLength))>=seqLength){
+
+	public boolean hasNext() {
+		if ((seqBuffer.length() - (seqIndex + seqLength)) >= seqLength) {
 			return true;
-		}else{
+		} else {
 			return false;
 		}
 	}
-	
+
 	/**
-	nextSequence will output the next sequence of size seqLength
+	nextSequence will output the next sequence of size seqLength as a long
 	
+	@return 64-bit long number representing the sequence
 	*/
-	
-	/*
-	public String nextSequence(){
+
+	public long nextSequence() {
 		seqIndex++;
-		return seqBuffer.substring(seqIndex-1,seqIndex-1+seqLength);
-	}
-	
-	*/
-	
-	//This method should output unique longs
-	
-	public long nextSequence(){
-		seqIndex++;
-		String bpSeq=seqBuffer.substring(seqIndex-1,seqIndex-1+seqLength);
+		String bpSeq = seqBuffer.substring(seqIndex - 1, seqIndex - 1 + seqLength);
 		return util.sequenceToLong(bpSeq);
-		//String bpSeq="ATCGATCGATCGATCG";
-		//bpSeq=bpSeq.replaceAll("a","00");
-		//bpSeq=bpSeq.replaceAll("t","11");
-		//bpSeq=bpSeq.replaceAll("c","01");
-		//bpSeq=bpSeq.replaceAll("g","10");
-		//return Long.parseLong(bpSeq,2);
-		
 	}
-	
-	
-	
-	
+
 }
