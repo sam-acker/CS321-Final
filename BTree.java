@@ -7,8 +7,6 @@ BTree class
 */
 class BTree{
 	
-	private int seqLength,degree,numKeys,blockSize;
-	
 	
 	/**
 	
@@ -57,6 +55,7 @@ class BTree{
 		public BTreeNode(byte[] data,int index){
 			this.index=index;
 			ByteBuffer bb = ByteBuffer.allocate(data.length);
+			bb.put(data);
 			//READ META DATA
 			parentIndex=bb.getInt(0);
 			//READ KEY DATA
@@ -138,6 +137,10 @@ class BTree{
 		
 	}
 	
+	//Begin BTree.java class
+	private int seqLength,degree,numKeys,blockSize;
+	private BTreeNode root;
+	
 	
 	
 	/**
@@ -163,6 +166,31 @@ class BTree{
 		//
 		*/
 	}
+	
+	
+	/**
+	reConstructor from disk	
+	*/
+	public BTree(byte[] data){
+		ByteBuffer bb = ByteBuffer.allocate(data.length);
+		bb.put(data);
+		seqLength=bb.getInt(0);
+		degree=bb.getInt(4);
+		
+		int rootByteOffset=bb.getInt(8);
+		byte[] nodeArray= new byte[4096];
+		bb.get(nodeArray,rootByteOffset,4096);
+		root=new BTreeNode(nodeArray,rootByteOffset);
+		
+		
+		
+		
+		
+		
+	}
+	
+	
+	
 	
 	/**
 	insert into BTree

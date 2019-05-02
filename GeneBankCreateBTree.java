@@ -51,7 +51,7 @@ class GeneBankCreateBTree{
 			}
 			
 			if (useCache==true){
-				cacheSize=Args[4]
+				cacheSize=Integer.parseInt(Args[4]);
 				if (Args.length==6){
 				debugLevel=Integer.parseInt(Args[5]);
 				}
