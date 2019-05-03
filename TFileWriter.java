@@ -106,13 +106,13 @@ class TFileWriter{
 	
 	/**
 	Read from file
-	
+	Should work - untested
 	*/
 	
 	public byte[] readNodeData(int nodeOffset){
-		
-		
-		return new byte[4096];
+		byte[] nodeArray= new byte[4096];
+		RAFile.get(nodeArray,nodeOffset,4096);
+		return nodeArray;
 	}
 	
 	
