@@ -107,7 +107,7 @@ class GeneBankCreateBTree{
 
 						//gbkReader.nextSequence() WILL GO THROUGH EVERY POSSIBLE SEQ IN FILE
 						//USE IT TO INSERT INTO B TREE - MIGHT BE MADE INTO LONG FIRST
-						gbkReader.nextSequence();
+						bTree.insert(gbkReader.nextSequence());
 						//System.out.println(gbkReader.nextSequence());
 					}
 

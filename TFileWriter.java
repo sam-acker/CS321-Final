@@ -1,6 +1,7 @@
 import java.io.RandomAccessFile;
 import java.io.IOException;
 import java.io.FileNotFoundException;
+import java.io.File;
 /**
 This class will write our .data.[k].t files / interface with the file
 
@@ -25,10 +26,16 @@ class TFileWriter{
 	public TFileWriter(int seqLength, int degree, String fileName){
 		this.degree=degree;
 		this.seqLength=seqLength;
+		
+		
 		try{
+			File f=new File(fileName);
+			fileName=f.getName();
+			
+			//System.out.println(fileName);
 		RAFile=new RandomAccessFile(fileName,"rw"); //read-write
 		}catch(FileNotFoundException e){
-			System.err.println("ERROR: An unexpected file exception has occured");
+			System.err.println("ERROR: An unexpected file exception has occured HERE");
 			return;
 		}
 		
@@ -49,7 +56,7 @@ class TFileWriter{
 		try{
 		RAFile=new RandomAccessFile(fileName,"rw"); //read-write
 		}catch(FileNotFoundException e){
-			System.err.println("ERROR: An unexpected file exception has occured");
+			System.err.println("ERROR: An unexpected file exception has occured ");
 			return;
 		}
 		
