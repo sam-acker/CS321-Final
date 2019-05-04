@@ -151,10 +151,10 @@ class BTree{
 	}
 
 	//Begin BTree.java class
-	private int seqLength,degree,numKeys,blockSize;
+	private int seqLength,degree,numKeys,blockSize,size;
 	private BTreeNode root;
 	private TFileWriter TFile;
-
+	
 
 	/**
 	Constructor
@@ -218,11 +218,35 @@ class BTree{
 	insert into BTree
 
 	*/
-	public void insert(TreeObject t){
+	public void insert(long key){
+		
+		//We could check for null root here, or just init the class by writing an empty root node
 		if(root == null) {
 			root = new BTreeNode(degree, 0);
-			root.keys.add(t);
+			root.keys.add(new TreeObject(key));
 		}
+		
+		//For actual insertion, check if root needs to be split, this is a special case (root creates 2 nodes below it, if root
+		//has children, children are split to 2 new root child nodes's children
+		
+		
+		
+		
+		
+		//If root is fine, find node to insert to, if full, split then add key
+		
+		
+		
+		
+		
+		
+		//If not full, add as normal
+		
+		
+		
+		
+		
+		
 
 	}
 
@@ -230,15 +254,25 @@ class BTree{
 	/**
 	Nodes split when full
 	*/
-	public void split(BTreeNode node, TreeObject t){
+	public void split(BTreeNode node, int index){
 
-		//new nodes for split
-		BTreeNode n1 = new BTreeNode(degree, 0);
-		BTreeNode n2 = new BTreeNode(degree, 0);
+		//Splitting will only create 1 new node (Exception: root splits)
+		BTreeNode newNode = new BTreeNode(degree, size++);
 
-		//Key directly to the left of the middle (E.x. node:[10, 20, 30]  c = 10)
-		TreeObject c = node.keys.get(node.keys.size()/2);
+		//We want to get (1,2,3) MIDDLE NODE(2)
+		//OR (1,2,3,4) MIDDLE LEFT (2)
+		//TreeObject c = node.keys.get(node.keys.size()/2);
 
+		
+		
+		
+		
+		//This code is usable just needs reworking
+		// Place nodes right of c into new node, left stays in current node
+		// c will be given to node's parent node (children split between 2 nodes but no child goes to parent)
+		
+		
+		/*
 		//places lesser values in new left node
 		int i = 0;
 		for(; i < node.keys.size()/2; i++) {
@@ -260,7 +294,7 @@ class BTree{
 
 		}
 
-
+		*/
 
 
 
