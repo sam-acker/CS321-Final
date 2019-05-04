@@ -167,9 +167,9 @@ class BTree{
 		this.blockSize=blockSize;
 		numKeys=2*degree-1;
 		TFile=new TFileWriter(seqLength,degree,(fileName+"."+seqLength+".t"));
-		//TFile.writeBOFMetaData(seqLength,degree,8192000); test
-
-
+		TFile.writeBOFMetaData(seqLength,degree,12); 
+		root=new BTreeNode(degree,0);
+		TFile.writeData(root.toByte(),root.index);
 		/*
 		//TEST CODE APPEARS TO WORK WELL
 		BTreeNode dummy= new BTreeNode(degree,13);

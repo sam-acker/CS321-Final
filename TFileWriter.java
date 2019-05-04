@@ -72,7 +72,7 @@ class TFileWriter{
 	
 	public void writeData(byte[] data,int nodeOffset){
 		try{
-		RAFile.seek(nodeOffset);
+		RAFile.seek((nodeOffset*4096)+12);
 		RAFile.write(data);
 		}catch(IOException e){
 			System.err.println("ERROR: An unexpected IO error has occured");
