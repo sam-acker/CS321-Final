@@ -220,6 +220,15 @@ class BTree{
 	*/
 	public void insert(long key){
 		
+		/*
+		To read a btreenode, use BTreeNode x=new BTreeNode(TFile.readNodeData(((children[y])*4096)+12),children[y])
+		where x is your new node to read and y is the index of the children you are trying to read
+		this SHOULD reconstruct the BTreeNode so you can use it as normal, I am still testing these methods
+		
+		This is assumming no cache, I am still working on cache implementation, although I will likely have the method to call remain the same so you shouldn't
+		need to test if we are using cache
+		*/
+		
 		//We could check for null root here, or just init the class by writing an empty root node
 		if(root == null) {
 			root = new BTreeNode(degree, 0);
