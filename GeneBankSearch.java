@@ -1,9 +1,12 @@
 import java.io.File;
+
 import java.IOException;
 import java.io.FileReader;
+import java.nio.ByteBuffer;
 import java.util.Scanner;
 
 public class GeneBankSearch{
+	
 	private static String btreeFile;
 	private static String queryFile;
 	private static int cacheSize = 0;
@@ -18,11 +21,24 @@ public class GeneBankSearch{
 	*/
 	public static void main(String... Args){
 		
+	
 		
 		
 		//Parse input
 		
-		try{
+		// Capacity for the ByteBuffer
+		int capacity = ;
+		try {
+			//ByteBuffer bb = ByteBuffer.allocate(capacity);
+			//bb.
+			//get args at spot 0
+			String fileName = Args[0];
+			//open file of name args at 0
+			
+			//convert binary file to byte array
+			byte[] bArray = file coverted to byte array;
+			BTree bt = new BTree(bArray);
+			int freq = bt.search(/*given sequence*/);
 		
 		
 		if(Args.length < 3 || > 5) {
@@ -53,16 +69,12 @@ public class GeneBankSearch{
 		String sequence = " ";
 		String degree = " ";
 		//End parsing
-		
-		
-	}
-	private static String reverseString(String x) {
-		if(x.length() == 1)
-			return x;
-		return "" + x.charAt(x.length() - 1) + reverseString(x.substring(0, x.length() -1));
+		try {
+			Scanner scan = new Scanner (new File(queryFile));
+		}
 		
 	}
-	
+
 	private static void printOperation() {
 		System.err.println("Operation : java GeneBankSearch" + "<0/1(no/with Cache)> <btree file> <query file>"
 	+ "[<debug level>]\n");
