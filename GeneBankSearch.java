@@ -37,10 +37,9 @@ public class GeneBankSearch{
 		
 		if (args[0]=="1"){
 			useCache=true;
+		} else if (!(args[0].equals("0") || args[0]==("1"))) {
+			printOperation();
 		}
-		//} else if (!(args[0].equals("0") || args[0]==("1"))) {
-		//	printOperation();
-		//}
 		
 		bTreeFile=args[1];
 		queryFile=args[2];
@@ -54,8 +53,7 @@ public class GeneBankSearch{
 			debugLevel = Integer.parseInt(args[4]);
 		}
 		}catch(Exception e){
-			System.out.println("Error; format should be following:\njava java GeneBankSearch <0/1(no/with Cache)> <btree file> <query file> [<debug level>]");
-			System.exit(1);
+			printOperation();
 		}
 		String sequence = " ";
 		String degree = " ";
@@ -89,4 +87,11 @@ public class GeneBankSearch{
 			
 		}
 	}
+	
+	private static void printOperation() {	
+		System.err.println("Operation : java GeneBankSearch" + "<0/1(no/with Cache)> <btree file> <query file>"	
+	+ "[<debug level>]\n");	
+		System.exit(1);	
+
+ 	}
 }
