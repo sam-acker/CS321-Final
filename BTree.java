@@ -1,5 +1,8 @@
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.io.RandomAccessFile; 
+import java.io.IOException;
+import java.io.FileNotFoundException;
 /**
 BTree class
 
@@ -150,7 +153,7 @@ class BTree{
 	//Begin BTree.java class
 	private int seqLength,degree,numKeys,blockSize;
 	private BTreeNode root;
-
+	private TFileWriter TFile;
 
 
 	/**
@@ -158,12 +161,12 @@ class BTree{
 
 
 	*/
-	public BTree(int seqLength,int degree,int blockSize,int cacheSize){
+	public BTree(int seqLength,int degree,int blockSize,int cacheSize,String fileName){
 		this.seqLength=seqLength;
 		this.degree=degree;
 		this.blockSize=blockSize;
 		numKeys=2*degree-1;
-
+		TFile=new TFileWriter(seqLength,degree,(fileName+"."+seqLength+".t"));
 
 
 
@@ -181,8 +184,14 @@ class BTree{
 	/**
 	reConstructor from disk
 	*/
-	public BTree(byte[] data){
-		ByteBuffer bb = ByteBuffer.allocate(data.length);
+	public BTree(String filename){
+		
+		try{
+		RandomAccessFile RAFile=new RandomAccessFile(filename,"r");
+		
+		ByteBuffer bb = ByteBuffer.allocate((int)RAFile.length());
+		byte[] data = new byte[(int)RAFile.length()];
+		RAFile.read(data);
 		bb.put(data);
 		seqLength=bb.getInt(0);
 		degree=bb.getInt(4);
@@ -194,7 +203,10 @@ class BTree{
 
 
 
-
+		}catch(Exception e){
+			System.err.println("ERROR: An unexpected file exception has occured");
+			return;
+		}
 
 
 	}
@@ -259,9 +271,12 @@ class BTree{
 	Search BTree
 
 	*/
-	public void search(){
+	public int search(long key){
 
 
+	
+	//return FREQUENCY
+	return 0;
 	}
 
 	/**

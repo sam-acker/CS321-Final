@@ -109,9 +109,9 @@ class TFileWriter{
 	Should work - untested
 	*/
 	
-	public byte[] readNodeData(int nodeOffset){
+	public byte[] readNodeData(int nodeOffset) throws IOException{
 		byte[] nodeArray= new byte[4096];
-		RAFile.get(nodeArray,nodeOffset,4096);
+		RAFile.readFully(nodeArray,nodeOffset,4096);
 		return nodeArray;
 	}
 	

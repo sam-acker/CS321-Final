@@ -88,7 +88,7 @@ class GeneBankCreateBTree{
 		try{
 			
 			
-			bTree = new BTree(seqLength,degree,BLOCK_SIZE,cacheSize);
+			bTree = new BTree(seqLength,degree,BLOCK_SIZE,cacheSize,gbkFileName);
 			
 			
 			GbkReader gbkReader = new GbkReader(new File(gbkFileName),seqLength);
