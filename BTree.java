@@ -161,7 +161,7 @@ class BTree{
 
 
 	*/
-	public BTree(int seqLength,int degree,int blockSize,int cacheSize,String fileName){
+	public BTree(int seqLength,int degree,int blockSize,int cacheSize,String fileName) throws IOException{
 		this.seqLength=seqLength;
 		this.degree=degree;
 		this.blockSize=blockSize;
@@ -221,7 +221,7 @@ class BTree{
 	public void insert(long key){
 		
 		/*
-		To read a btreenode, use BTreeNode x=new BTreeNode(TFile.readNodeData(((children[y])*4096)+12),children[y])
+		To read a btreenode, use BTreeNode x=new BTreeNode(TFile.readNodeData(children[y]),children[y])
 		where x is your new node to read and y is the index of the children you are trying to read
 		this SHOULD reconstruct the BTreeNode so you can use it as normal, I am still testing these methods
 		

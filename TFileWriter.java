@@ -93,17 +93,11 @@ class TFileWriter{
 	...
 	
 	*/
-	public void writeBOFMetaData(int seqLength, int deg, int rootByteOffset){
-		try{
+	public void writeBOFMetaData(int seqLength, int deg, int rootByteOffset) throws IOException{
 		RAFile.seek(0);
 		RAFile.writeInt(seqLength);
 		RAFile.writeInt(deg);
 		RAFile.writeInt(rootByteOffset);
-		}catch (IOException e){
-			System.err.println("ERROR: An unexpected IO error has occured");
-			return;
-		}
-		
 	}
 	
 	
@@ -118,7 +112,7 @@ class TFileWriter{
 	
 	public byte[] readNodeData(int nodeOffset) throws IOException{
 		byte[] nodeArray= new byte[4096];
-		RAFile.readFully(nodeArray,nodeOffset,4096);
+		RAFile.readFully(nodeArray,((nodeOffset*4096)+12),4096);
 		return nodeArray;
 	}
 	

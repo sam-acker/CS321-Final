@@ -126,8 +126,8 @@ class GeneBankCreateBTree{
 			//gbkReader.fillGeneBuffer();
 			//gbkReader.fillSeqBuffer();
 
-		}catch(FileNotFoundException e){
-			System.err.println("An error has occured opening the file: File not found");
+		}catch(Exception e){
+			System.err.println("something went wrong");
 			return;
 		}
 
