@@ -112,7 +112,8 @@ class TFileWriter{
 	
 	public byte[] readNodeData(int nodeOffset) throws IOException{
 		byte[] nodeArray= new byte[4096];
-		RAFile.readFully(nodeArray,((nodeOffset*4096)+12),4096);
+		RAFile.seek((nodeOffset*4096)+12);
+		RAFile.readFully(nodeArray,0,4096);
 		return nodeArray;
 	}
 	

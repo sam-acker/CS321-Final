@@ -102,7 +102,7 @@ class GeneBankCreateBTree{
 
 				while(gbkReader.fillSeqBuffer()){
 					int i=0;//testing
-					while (gbkReader.hasNext()&&i<310){
+					while (gbkReader.hasNext()&&i<700){
 
 						i++;
 						//insert sequence into tree
@@ -135,7 +135,7 @@ class GeneBankCreateBTree{
 			//gbkReader.fillSeqBuffer();
 
 		}catch(Exception e){
-			System.out.println(e);
+			e.printStackTrace(System.out);
 			System.err.println("something went wrong");
 			return;
 		}

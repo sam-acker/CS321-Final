@@ -60,17 +60,26 @@ class BTree{
 			this.index=index;
 			ByteBuffer bb = ByteBuffer.allocate(data.length);
 			bb.put(data);
+			children=new ArrayList<Integer>(numKeys+1);
+			keys=new ArrayList<TreeObject>(numKeys);
 			//READ META DATA
 			parentIndex=bb.getInt(0);
 			//READ KEY DATA
 			for (int i=0;i<numKeys;i++){
-				keys.add(new TreeObject(bb.getLong((i*12)+4),bb.getInt((i*12)+12)));
+				
+				if (bb.getLong((i*12)+4)!=-1){
+					keys.add(new TreeObject(bb.getLong((i*12)+4),bb.getInt((i*12)+12)));
+					
+				}
+				
 				// 0M4K12F16K24F28
 			}
 			int nIndex=4+(12*numKeys);
 			//READ CHILDREN DATA
 			for (int j=0;j<numKeys+1;j++){
+				if (bb.getInt((4*j)+nIndex)!=-1){
 				children.add(bb.getInt((4*j)+nIndex));
+				}
 			}
 		}
 
@@ -223,7 +232,7 @@ class BTree{
 	insert into BTree
 
 	*/
-	public void insert(long key){
+	public void insert(long key) throws IOException{
 		
 		/*
 		To read a btreenode, use BTreeNode x=new BTreeNode(TFile.readNodeData(children[y]),children[y])
@@ -268,7 +277,7 @@ class BTree{
 
 	}
 	
-	public void objInsert(TreeObject obj){
+	public void objInsert(TreeObject obj) throws IOException{
 		//actually insert key
 		//System.out.println("REACHED OBJ INSERT");
 		
@@ -304,14 +313,41 @@ class BTree{
 			//DONE
 			return;
 		}else{
-			//Node has children, find proper child to go to
-			
+
+			int i=0;
+			while (obj.compareTo(toInsert.keys.get(i))!=-1){
+				i++;
+				if (i>=toInsert.keys.size()){
+					//i--;
+					break;
+				}
+				
+			}
+			BTreeNode nextInsert=new BTreeNode(TFile.readNodeData(toInsert.children.get(i)),toInsert.children.get(i));
 			
 			
 			//check if child is full, if so split
-			
-			
+			if (nextInsert.isFull()){
+				split(nextInsert,i);
+				
+				//Search toInsert again before going to child
+				//
+				//
+				//
+				//
+				//
+				
+				
+			}
+			toInsert=nextInsert;
+			objInsert(obj);
 			//recursively call objInsert after setting toInsert to the child
+			
+			
+			
+			
+			
+			
 			return;
 		}
 	}
