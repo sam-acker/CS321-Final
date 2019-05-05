@@ -328,6 +328,7 @@ class BTree{
 			
 			//check if child is full, if so split
 			if (nextInsert.isFull()){
+				parent=toInsert;
 				split(nextInsert,i);
 				
 				//Search toInsert again before going to child
@@ -361,19 +362,32 @@ class BTree{
 	public void split(BTreeNode node, int index){
 
 		//Splitting will only create 1 new node (Exception: root splits)
+		System.out.println("ATTEMPTING NODE SPLIT ON INDEX "+index);
 		BTreeNode newNode = new BTreeNode(degree, size++);
 
 		//We want to get (1,2,3) MIDDLE NODE(2)
 		//OR (1,2,3,4) MIDDLE LEFT (2)
-		//TreeObject c = node.keys.get(node.keys.size()/2);
+		int middleIndex=(int)Math.ceil((root.keys.size()/2)-1);
+		TreeObject c = root.keys.get(middleIndex);
 
-		
-		
-		
 		
 		//This code is usable just needs reworking
 		// Place nodes right of c into new node, left stays in current node
 		// c will be given to node's parent node (children split between 2 nodes but no child goes to parent)
+		
+		//Parent is parent
+		//Current node is node
+		//other node is newNode
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		
 		
 		/*
@@ -401,7 +415,9 @@ class BTree{
 		*/
 
 
-
+		TFile.writeData(parent.toByte(),parent.index);
+		TFile.writeData(node.toByte(),node.index);
+		TFile.writeData(newNode.toByte(),newNode.index);
 
 	}
 	
