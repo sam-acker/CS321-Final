@@ -81,6 +81,7 @@ class BTree{
 		returns true if full, false if not full
 		*/
 		public boolean isFull(){
+			System.out.println("NUM KEYS "+numKeys+"  AND KEYS SIZE "+keys.size());
 			if(keys.size() >= numKeys) {
 				return true;
 			}
@@ -165,13 +166,14 @@ class BTree{
 
 	*/
 	public BTree(int seqLength,int degree,int blockSize,int cacheSize,String fileName) throws IOException{
+		size=0;
 		this.seqLength=seqLength;
 		this.degree=degree;
 		this.blockSize=blockSize;
 		numKeys=2*degree-1;
 		TFile=new TFileWriter(seqLength,degree,(fileName+"."+seqLength+".t"));
 		TFile.writeBOFMetaData(seqLength,degree,12); 
-		root=new BTreeNode(degree,0);
+		root=new BTreeNode(degree,size++);
 		TFile.writeData(root.toByte(),root.index);
 		/*
 		//TEST CODE APPEARS TO WORK WELL
@@ -242,8 +244,8 @@ class BTree{
 		//has children, children are split to 2 new root child nodes's children
 		
 		if (root.isFull()){
-			rootSplit();
 			System.out.println("ATTEMPTING ROOT SPLIT");
+			rootSplit();
 			//return;
 		}
 		
@@ -268,16 +270,16 @@ class BTree{
 	
 	public void objInsert(TreeObject obj){
 		//actually insert key
-		System.out.println("REACHED OBJ INSERT");
+		//System.out.println("REACHED OBJ INSERT");
 		
 		if (toInsert.isLeaf()){
-			System.out.println("leafCheck");
+			//System.out.println("leafCheck");
 			//We have found the place to insert
 			//figure out correct index to place into
 			for (int i=0;i<toInsert.keys.size();i++){
 				int comp=obj.compareTo(toInsert.keys.get(i));
 				if (comp==-1){
-					System.out.println("Found correct key spot");
+					//System.out.println("Found correct key spot");
 					//Correct key spot, insert
 					toInsert.keys.add(i,obj);
 					TFile.writeData(toInsert.toByte(),toInsert.index);
@@ -286,7 +288,7 @@ class BTree{
 					
 				}else if (comp==0){
 					//Duplicate
-					System.out.println("Found Duplicate");
+					//System.out.println("Found Duplicate");
 					toInsert.keys.get(i).increaseFrequency();
 					TFile.writeData(toInsert.toByte(),toInsert.index);
 					//DONE
@@ -296,7 +298,7 @@ class BTree{
 				
 			}
 			//If we reach here we know we need to add key to last spot
-			System.out.println("Found last key spot");
+			//System.out.println("Found last key spot");
 			toInsert.keys.add(obj);
 			TFile.writeData(toInsert.toByte(),toInsert.index);
 			//DONE
@@ -391,7 +393,7 @@ class BTree{
 		for (int i=middleIndex+1;i<root.keys.size();i++){
 			right.keys.add(root.keys.get(i));
 		}
-		
+		System.out.println("Processed keys");
 		//Update the root's keys
 		root.keys.clear();
 		root.keys.add(c);
@@ -399,19 +401,26 @@ class BTree{
 		// 0 1 2 
 		//0 1 2 3 
 		
-		
+		System.out.println("Prepare process left child");
 		//int middleChildIndex=(int)Math.ceil((root.children.size()/2)-1);
 		
+		/*
+		ARE CHILDREN BEING ADDED CORRECTLY? 
+		*/
 		//Move children to left
 		for (int i=0;i<middleIndex+1;i++){
-			left.children.add(root.children.get(i));
+			if (i<root.children.size()){
+				left.children.add(root.children.get(i));
+			}
 		}
-		
+		System.out.println("Processed left children");
 		//Move children to right
 		for (int i=middleIndex+1;i<root.children.size();i++){
-			right.children.add(root.children.get(i));
+			if (i<root.children.size()){
+				right.children.add(root.children.get(i));
+			}
 		}
-		
+		System.out.println("Processed children");
 		root.children.clear();
 		root.children.add(left.index);
 		root.children.add(right.index);
@@ -419,7 +428,7 @@ class BTree{
 		TFile.writeData(left.toByte(),left.index);
 		TFile.writeData(right.toByte(),right.index);
 		
-		
+		System.out.println("Root split successful");
 	}
 	
 
