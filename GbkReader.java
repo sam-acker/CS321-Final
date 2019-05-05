@@ -130,6 +130,7 @@ class GbkReader {
 	public long nextSequence() {
 		seqIndex++;
 		String bpSeq = seqBuffer.substring(seqIndex - 1, seqIndex - 1 + seqLength);
+		System.out.println("PASSING IN: "+bpSeq);
 		return util.sequenceToLong(bpSeq);
 	}
 

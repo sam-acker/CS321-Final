@@ -91,7 +91,10 @@ class BTree{
 		returns true if the node is a leaf
 		*/
 		public boolean isLeaf() {
-			return children == null;
+			if (children.size()==0){
+				return true;
+			}
+			return false;
 		}
 
 
@@ -142,7 +145,7 @@ class BTree{
 
 
 
-			System.out.println(bb.toString());
+			//System.out.println(bb.toString());
 			//return bb;
 			return bb.array();
 		}
@@ -152,7 +155,7 @@ class BTree{
 
 	//Begin BTree.java class
 	private int seqLength,degree,numKeys,blockSize,size;
-	private BTreeNode root;
+	private BTreeNode root, parent, toInsert;
 	private TFileWriter TFile;
 	
 
@@ -230,21 +233,26 @@ class BTree{
 		*/
 		
 		//We could check for null root here, or just init the class by writing an empty root node
-		if(root == null) {
-			root = new BTreeNode(degree, 0);
-			root.keys.add(new TreeObject(key));
-		}
+		//if(root == null) {
+		//	root = new BTreeNode(degree, 0);
+		//	root.keys.add(new TreeObject(key));
+		//}
 		
 		//For actual insertion, check if root needs to be split, this is a special case (root creates 2 nodes below it, if root
 		//has children, children are split to 2 new root child nodes's children
 		
+		if (root.isFull()){
+			rootSplit();
+			//return;
+		}
 		
 		
 		
 		
 		//If root is fine, find node to insert to, if full, split then add key
 		
-		
+		toInsert=root;
+		objInsert(new TreeObject(key));
 		
 		
 		
@@ -254,10 +262,57 @@ class BTree{
 		
 		
 		
-		
-		
 
 	}
+	
+	public void objInsert(TreeObject obj){
+		//actually insert key
+		System.out.println("REACHED OBJ INSERT");
+		
+		if (toInsert.isLeaf()){
+			System.out.println("leafCheck");
+			//We have found the place to insert
+			//figure out correct index to place into
+			for (int i=1;i<toInsert.keys.size()-1;i++){
+				if (obj.compareTo(toInsert.keys.get(i))==-1){
+					System.out.println("Found correct key spot");
+					//Correct key spot, insert
+					toInsert.keys.add(i-1,obj);
+					TFile.writeData(toInsert.toByte(),toInsert.index);
+					//DONE
+					return;
+					
+				}else if (obj.compareTo(toInsert.keys.get(i))==0){
+					//Duplicate
+					System.out.println("Found Duplicate");
+					toInsert.keys.get(i).increaseFrequency();
+					TFile.writeData(toInsert.toByte(),toInsert.index);
+					//DONE
+					return;
+				}
+				
+				
+			}
+			//If we reach here we know we need to add key to last spot
+			System.out.println("Found last key spot");
+			toInsert.keys.add(obj);
+			TFile.writeData(toInsert.toByte(),toInsert.index);
+			//DONE
+			return;
+		}else{
+			//Node has children, find proper child to go to
+			
+			
+			
+			//check if child is full, if so split
+			
+			
+			//recursively call objInsert after setting toInsert to the child
+			return;
+		}
+	}
+	
+	
 
 
 	/**
@@ -309,6 +364,62 @@ class BTree{
 
 
 	}
+	
+	/**
+	Might need tweaking; untested
+	
+	*/
+	
+	
+	public void rootSplit(){
+		// 0 1 2 3    size=4, /2 = 2 -1 = 1
+		// 0 1 2      size=3, /2 = 1.5 -1 = .5 ciel>1
+		int middleIndex=(int)Math.ceil((root.keys.size()/2)-1);
+		TreeObject c = root.keys.get(middleIndex);
+		
+		BTreeNode left= new BTreeNode(degree, size++);
+		BTreeNode right= new BTreeNode(degree, size++);
+		
+		//Move keys to left node
+		for (int i=0;i<middleIndex;i++){
+			left.keys.add(root.keys.get(i));
+		}
+		
+		//Move keys to right node
+		for (int i=middleIndex+1;i<root.keys.size();i++){
+			right.keys.add(root.keys.get(i));
+		}
+		
+		//Update the root's keys
+		root.keys.clear();
+		root.keys.add(c);
+		
+		// 0 1 2 
+		//0 1 2 3 
+		
+		
+		//int middleChildIndex=(int)Math.ceil((root.children.size()/2)-1);
+		
+		//Move children to left
+		for (int i=0;i<middleIndex+1;i++){
+			left.children.add(root.children.get(i));
+		}
+		
+		//Move children to right
+		for (int i=middleIndex+1;i<root.children.size();i++){
+			right.children.add(root.children.get(i));
+		}
+		
+		root.children.clear();
+		root.children.add(left.index);
+		root.children.add(right.index);
+		TFile.writeData(root.toByte(),root.index);
+		TFile.writeData(left.toByte(),left.index);
+		TFile.writeData(right.toByte(),right.index);
+		
+		
+	}
+	
 
 	/**
 	Search BTree

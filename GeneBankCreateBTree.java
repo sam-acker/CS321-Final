@@ -36,6 +36,8 @@ class GeneBankCreateBTree{
 		String gbkFileName=" ";
 		boolean useCache=false;
 		
+		GeneUtility util = new GeneUtility(); //TESTING
+		
 		
 
 		//Parse arg input 
@@ -99,15 +101,18 @@ class GeneBankCreateBTree{
 				gbkReader.fillGeneBuffer();
 
 				while(gbkReader.fillSeqBuffer()){
+					int i=0;//testing
+					while (gbkReader.hasNext()&&i<5){
 
-					while (gbkReader.hasNext()){
-
-
+						i++;
 						//insert sequence into tree
 
 						//gbkReader.nextSequence() WILL GO THROUGH EVERY POSSIBLE SEQ IN FILE
 						//USE IT TO INSERT INTO B TREE - MIGHT BE MADE INTO LONG FIRST
-						bTree.insert(gbkReader.nextSequence());
+						Long nxtS=gbkReader.nextSequence();
+						System.out.println("INSERTING "+ util.longToSequence(nxtS,seqLength));
+						
+						bTree.insert(nxtS);
 						//System.out.println(gbkReader.nextSequence());
 					}
 
