@@ -43,7 +43,7 @@ class GeneUtility {
 
 	public String longToSequence(long number, int seqSize) {
 		String sequence = Long.toString(number, 2); //cvt to base 2
-		System.out.println("BINARY "+sequence);
+		//System.out.println("BINARY "+sequence);
 		int j = (seqSize*2) - sequence.length();
 		String adder = "";
 		//Lossy conversion from binary to long to binary, add back in lost 0's
@@ -52,7 +52,7 @@ class GeneUtility {
 			j--;
 		}
 		sequence = adder + sequence;
-		System.out.println("BINARYN "+sequence);
+		//System.out.println("BINARYN "+sequence);
 		StringBuffer buff = new StringBuffer();
 		int i = 2;
 		//Parse binary back to string

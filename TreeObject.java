@@ -41,9 +41,10 @@ class TreeObject implements Comparable < TreeObject > {
     }
 
     public int compareTo(TreeObject x) {
-        if (this.key > x.key) {
+		System.out.println("Comparing " +this.key +" TO "+ x.returnKey());
+        if (this.key > x.returnKey()) {
             return 1;
-        } else if (this.key < x.key) {
+        } else if (this.key <x.returnKey()) {
             return -1;
         } else
             return 0;

@@ -24,7 +24,7 @@ class BTree{
 		private int parentIndex,index;
 		//KEYS
 
-		private ArrayList<TreeObject> keys;
+		public ArrayList<TreeObject> keys;
 
 		//CHILDREN
 		private ArrayList<Integer> children;
@@ -154,8 +154,8 @@ class BTree{
 	}
 
 	//Begin BTree.java class
-	private int seqLength,degree,numKeys,blockSize,size;
-	private BTreeNode root, parent, toInsert;
+	public int seqLength,degree,numKeys,blockSize,size;
+	public BTreeNode root, parent, toInsert;
 	private TFileWriter TFile;
 	
 
@@ -243,6 +243,7 @@ class BTree{
 		
 		if (root.isFull()){
 			rootSplit();
+			System.out.println("ATTEMPTING ROOT SPLIT");
 			//return;
 		}
 		
@@ -273,16 +274,17 @@ class BTree{
 			System.out.println("leafCheck");
 			//We have found the place to insert
 			//figure out correct index to place into
-			for (int i=1;i<toInsert.keys.size()-1;i++){
-				if (obj.compareTo(toInsert.keys.get(i))==-1){
+			for (int i=0;i<toInsert.keys.size();i++){
+				int comp=obj.compareTo(toInsert.keys.get(i));
+				if (comp==-1){
 					System.out.println("Found correct key spot");
 					//Correct key spot, insert
-					toInsert.keys.add(i-1,obj);
+					toInsert.keys.add(i,obj);
 					TFile.writeData(toInsert.toByte(),toInsert.index);
 					//DONE
 					return;
 					
-				}else if (obj.compareTo(toInsert.keys.get(i))==0){
+				}else if (comp==0){
 					//Duplicate
 					System.out.println("Found Duplicate");
 					toInsert.keys.get(i).increaseFrequency();
