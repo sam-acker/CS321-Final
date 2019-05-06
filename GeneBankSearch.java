@@ -61,17 +61,21 @@ public class GeneBankSearch{
 		
 			
 		
-		
+		int x=0;
 		
 		
 		try {
+			
 			BTree tree = new BTree(bTreeFile);
 			Scanner scan = new Scanner (new File(queryFile));
 			while (scan.hasNextLine()){
 				String seq=scan.next();
-				System.out.println(seq);
+				//System.out.println(seq);
 				int freq=tree.search(util.sequenceToLong(seq));
-				System.out.println("  FREQ: "+freq);
+				if  (freq!=0){
+				System.out.println(seq+" FREQ: "+freq);
+				}
+				x++;
 				//Print these
 				
 			}
@@ -83,6 +87,8 @@ public class GeneBankSearch{
 			
 			
 		}catch(Exception e){
+			System.out.println(x+" QUERIES RAN");
+			//e.printStackTrace(System.out);
 			System.err.println("End of Query file :)"); //hehe
 			
 			

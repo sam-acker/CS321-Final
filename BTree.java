@@ -263,6 +263,7 @@ class BTree {
                 }
 
             }
+			//System.out.println("DEBUG:\nToinsert("+toInsert.index+") children size:"+toInsert.children.size()+"\nOn i="+i+" key amount="+toInsert.keys.size());
             BTreeNode nextInsert = new BTreeNode(TFile.readNodeData(toInsert.children.get(i)), toInsert.children.get(i));
 
 
@@ -299,7 +300,8 @@ class BTree {
     public void split(BTreeNode node, int index) {
 
         //Splitting will only create 1 new node (Exception: root splits)
-        System.out.println("ATTEMPTING NODE SPLIT ON INDEX " + index + " NODE KEY SIZE: " + node.keys.size());
+        System.out.println("ATTEMPTING NODE SPLIT ON INDEX " + index + " NODE KEY SIZE: " + node.keys.size()+"\nChild size="+node.children.size());
+		
         BTreeNode newNode = new BTreeNode(degree, size++);
 
         //We want to get (1,2,3) MIDDLE NODE(2)
@@ -318,11 +320,13 @@ class BTree {
         }
 
         //Move children to new node
-        System.out.println("SPLIT MOVE CHILDREN");
-        for (int i = middleIndex + 1; i < node.children.size(); i++) {
-            if (i < root.children.size()) {
+        System.out.println("SPLIT MOVE CHILDREN ON middleindex="+middleIndex);
+		int bugFix=node.children.size();
+        for (int i = middleIndex + 1; i < bugFix; i++) {
+           // if (i < root.children.size()||node.index>10) {
+				//if (i < numKeys+1) {
                 newNode.children.add(node.children.remove(middleIndex + 1));
-            }
+           // }
         }
 
         //Add new node to parent's children
@@ -330,7 +334,10 @@ class BTree {
 
         //Move middle key to parent
         parent.keys.add(index, node.keys.remove(middleIndex));
-
+		//if (size==993){
+		//	System.out.println("Stopping at index 992, split node index="+node.index+"\nnew Node children size="+newNode.children.size()+"\nNewnode key size="+newNode.keys.size());
+		//	System.exit(0);
+		//}
         TFile.writeData(parent.toByte(), parent.index);
         TFile.writeData(node.toByte(), node.index);
         TFile.writeData(newNode.toByte(), newNode.index);
@@ -420,7 +427,12 @@ class BTree {
                     break;
 
                 }
+				
                 if (i == search.keys.size() - 1) {
+					if (search.isLeaf()) {
+                        return 0;
+
+                    }
                     search = new BTreeNode(TFile.readNodeData(search.children.get(i + 1)), search.children.get(i + 1));
                     break;
 

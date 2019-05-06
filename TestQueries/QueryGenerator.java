@@ -19,8 +19,9 @@ public class QueryGenerator
 
 	public static void generateQueries(int k, int n)
 	{
+		try{
 		Random generator = new Random();
-
+			BufferedWriter bwr = new BufferedWriter(new FileWriter(new File("QRY")));
 		for (int i=0; i<n; i++) {
 			long next = generator.nextLong();
 			StringBuilder buffer = new StringBuilder(MAX_LENGTH); 
@@ -35,9 +36,20 @@ public class QueryGenerator
 				}
 				next = next >>> 2;
 			}
-			System.out.println(buffer);
-		}
+			//System.out.println(buffer);
+			buffer.append("\n");
+			
 
+			bwr.write(buffer.toString());
+			
+		
+		}
+//flush the stream
+		bwr.flush();
+		
+		//close the stream
+		bwr.close();
+		}catch(Exception e){}
 
 	}
 
