@@ -133,13 +133,19 @@ class GeneBankCreateBTree{
 
 			//gbkReader.fillGeneBuffer();
 			//gbkReader.fillSeqBuffer();
+			if (debugLevel==1){
+			bTree.dumpToTextfile();
+		}
+
+			
+			
 
 		}catch(Exception e){
 			e.printStackTrace(System.out);
 			System.err.println("something went wrong");
 			return;
 		}
-
+		
 		System.out.println("DONE");
 
 		//End GBK parsing + insertion into BTree

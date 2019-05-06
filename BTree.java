@@ -3,6 +3,9 @@ import java.util.ArrayList;
 import java.io.RandomAccessFile;
 import java.io.IOException;
 import java.io.FileNotFoundException;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 /**
 BTree class
 
@@ -447,9 +450,28 @@ class BTree {
     /**
     Print the tree to a txt file (if debug==1)
     */
-    public void dumpToTextfile() {
-
-
+    public void dumpToTextfile()throws IOException {
+		BufferedWriter bwr = new BufferedWriter(new FileWriter(new File("dump.txt")));
+		
+		
+		
+		
+		bwr.write("bush did 9/11");
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		//flush the stream
+		bwr.flush();
+		
+		//close the stream
+		bwr.close();
 
     }
 
