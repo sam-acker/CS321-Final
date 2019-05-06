@@ -12,7 +12,7 @@ TODO: throw exceptions instead of catching here
 class TFileWriter{
 	
 	
-	private int seqLength,degree;
+	//private int seqLength,degree;
 	private String fileName;
 	private RandomAccessFile RAFile;
 	
@@ -22,10 +22,31 @@ class TFileWriter{
 	Constructor
 	fileName will be the name OF THE T FILE
 	*/
-	
+	/*
 	public TFileWriter(int seqLength, int degree, String fileName){
-		this.degree=degree;
-		this.seqLength=seqLength;
+		//this.degree=degree;
+		//this.seqLength=seqLength;
+		
+		
+		try{
+			File f=new File(fileName);
+			fileName=f.getName();
+			
+			//System.out.println(fileName);
+		RAFile=new RandomAccessFile(fileName,"rw"); //read-write
+		}catch(FileNotFoundException e){
+			System.err.println("ERROR: An unexpected file exception has occured HERE");
+			return;
+		}
+		
+		
+		
+	}
+	*/
+	
+	public TFileWriter(String fileName){
+		//this.degree=degree;
+		//this.seqLength=seqLength;
 		
 		
 		try{
@@ -51,8 +72,8 @@ class TFileWriter{
 	*/
 	
 	public TFileWriter(int seqLength, int degree, String fileName, int cacheSize){
-		this.degree=degree;
-		this.seqLength=seqLength;
+		//this.degree=degree;
+		//this.seqLength=seqLength;
 		try{
 		RAFile=new RandomAccessFile(fileName,"rw"); //read-write
 		}catch(FileNotFoundException e){
@@ -62,6 +83,7 @@ class TFileWriter{
 		
 		
 	}
+	
 	
 	
 	

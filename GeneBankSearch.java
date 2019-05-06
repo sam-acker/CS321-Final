@@ -69,20 +69,21 @@ public class GeneBankSearch{
 			Scanner scan = new Scanner (new File(queryFile));
 			while (scan.hasNextLine()){
 				String seq=scan.next();
+				System.out.println(seq);
 				int freq=tree.search(util.sequenceToLong(seq));
-				
+				System.out.println("  FREQ: "+freq);
 				//Print these
 				
 			}
 			
 			
-			
+			return;
 			
 			
 			
 			
 		}catch(Exception e){
-			System.err.println("ERROR: UNKNOWN");
+			System.err.println("End of Query file :)"); //hehe
 			
 			
 		}

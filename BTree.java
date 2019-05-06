@@ -59,6 +59,7 @@ class BTree{
 		public BTreeNode(byte[] data,int index){
 			this.index=index;
 			ByteBuffer bb = ByteBuffer.allocate(data.length);
+			//System.out.println("Reconstructing... data length: "+data.length);
 			bb.put(data);
 			children=new ArrayList<Integer>(numKeys+1);
 			keys=new ArrayList<TreeObject>(numKeys);
@@ -182,7 +183,8 @@ class BTree{
 		this.degree=degree;
 		this.blockSize=blockSize;
 		numKeys=2*degree-1;
-		TFile=new TFileWriter(seqLength,degree,(fileName+"."+seqLength+".t"));
+		//TFile=new TFileWriter(seqLength,degree,(fileName+"."+seqLength+".t"));
+		TFile=new TFileWriter(fileName+"."+seqLength+".t");
 		TFile.writeBOFMetaData(seqLength,degree,12); 
 		root=new BTreeNode(degree,size++);
 		TFile.writeData(root.toByte(),root.index);
@@ -200,26 +202,35 @@ class BTree{
 	/**
 	reConstructor from disk
 	*/
-	public BTree(String filename){
+	public BTree(String filename) throws IOException{
 		
 		try{
-		RandomAccessFile RAFile=new RandomAccessFile(filename,"r");
+		//RandomAccessFile RAFile=new RandomAccessFile(filename,"r");
 		
-		ByteBuffer bb = ByteBuffer.allocate((int)RAFile.length());
-		byte[] data = new byte[(int)RAFile.length()];
-		RAFile.read(data);
-		bb.put(data);
-		seqLength=bb.getInt(0);
-		degree=bb.getInt(4);
+		//ByteBuffer bb = ByteBuffer.allocate((int)RAFile.length());
+		//byte[] data = new byte[(int)RAFile.length()];
+		//RAFile.read(data);
+		//bb.put(data);
+		//seqLength=bb.getInt(0);
+		//degree=bb.getInt(4);
 
-		int rootByteOffset=bb.getInt(8);
-		byte[] nodeArray= new byte[4096];
-		bb.get(nodeArray,rootByteOffset,4096);
-		root=new BTreeNode(nodeArray,rootByteOffset);
-
+		//int rootByteOffset=bb.getInt(8);
+		//byte[] nodeArray= new byte[4096];
+		//bb.get(nodeArray,rootByteOffset,4096);
+		
+		TFile = new TFileWriter(filename);
+		
+		int[] metadata=TFile.readBOFMetaData();
+		seqLength=metadata[0];
+		degree=metadata[1];
+		numKeys=2*degree-1;
+		blockSize=4096;
+		root=new BTreeNode(TFile.readNodeData(0),0);
+		
 
 
 		}catch(Exception e){
+			e.printStackTrace(System.out);
 			System.err.println("ERROR: An unexpected file exception has occured BTREE RECON");
 			return;
 		}
@@ -482,12 +493,45 @@ class BTree{
 	Search BTree
 
 	*/
-	public int search(long key){
-
-
-	
-	//return FREQUENCY
-	return 0;
+	public int search(long key) throws IOException{
+		//System.out.println("Attempting search for key:"+key);
+		TreeObject treeKey=new TreeObject(key);
+		BTreeNode search=root;
+		//System.out.println(root.keys.size());
+		while (true){
+			//Start comparing keys
+			//System.out.print(search.index);
+			for (int i=0;i<search.keys.size();i++){
+				int comp=treeKey.compareTo(search.keys.get(i));
+				//if (i==0){
+				//	System.out.println(comp);
+				//}
+				if (comp==0){
+					//WHAT LUCK
+					return search.keys.get(i).returnFrequency();
+				}
+				if (comp==-1){
+					//Stop here,
+					if (search.isLeaf()){
+						//System.out.println("Critical search error: None");
+						return 0;
+						
+					}
+					
+					search=new BTreeNode(TFile.readNodeData(search.children.get(i)),search.children.get(i));
+					break;
+					
+				}
+				if (i==search.keys.size()-1){
+					search=new BTreeNode(TFile.readNodeData(search.children.get(i+1)),search.children.get(i+1));
+					break;
+					
+				}
+			}
+			
+			
+		}
+		
 	}
 
 	/**

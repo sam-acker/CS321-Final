@@ -19,6 +19,7 @@ class GeneUtility {
 	*/
 
 	public long sequenceToLong(String sequence) {
+		sequence=sequence.toLowerCase();
 		sequence = sequence.replaceAll("a", "00");
 		sequence = sequence.replaceAll("t", "11");
 		sequence = sequence.replaceAll("c", "01");
