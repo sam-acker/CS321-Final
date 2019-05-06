@@ -102,7 +102,7 @@ class GeneBankCreateBTree{
 
 				while(gbkReader.fillSeqBuffer()){
 					int i=0;//testing
-					while (gbkReader.hasNext()&&i<700){
+					while (gbkReader.hasNext()){
 
 						i++;
 						//insert sequence into tree
@@ -110,7 +110,7 @@ class GeneBankCreateBTree{
 						//gbkReader.nextSequence() WILL GO THROUGH EVERY POSSIBLE SEQ IN FILE
 						//USE IT TO INSERT INTO B TREE - MIGHT BE MADE INTO LONG FIRST
 						Long nxtS=gbkReader.nextSequence();
-						System.out.println("INSERTING "+ util.longToSequence(nxtS,seqLength)+"  LONG KEY "+nxtS);
+						//System.out.println("INSERTING "+ util.longToSequence(nxtS,seqLength)+"  LONG KEY "+nxtS);
 						
 						bTree.insert(nxtS);
 						//System.out.println(gbkReader.nextSequence());
@@ -164,7 +164,7 @@ class GeneBankCreateBTree{
 		public static int optimumDegree(int blockSize){
 		// UNITS IN BYTES // AN INT IS 4 BYTES // LONG 8 BYTES
 		int deg=1;
-		int metaSize=4;
+		int metaSize=0;
 		int dataSize=0;
 		int keyCount=2*deg-1;
 		

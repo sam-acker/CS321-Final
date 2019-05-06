@@ -21,7 +21,7 @@ class BTree{
 	class BTreeNode{
 
 		//private boolean root; //if parentIndex==null we can assume root?
-		private int parentIndex,index;
+		private int index;
 		//KEYS
 
 		public ArrayList<TreeObject> keys;
@@ -63,18 +63,18 @@ class BTree{
 			children=new ArrayList<Integer>(numKeys+1);
 			keys=new ArrayList<TreeObject>(numKeys);
 			//READ META DATA
-			parentIndex=bb.getInt(0);
+			//parentIndex=bb.getInt(0);
 			//READ KEY DATA
 			for (int i=0;i<numKeys;i++){
 				
-				if (bb.getLong((i*12)+4)!=-1){
-					keys.add(new TreeObject(bb.getLong((i*12)+4),bb.getInt((i*12)+12)));
+				if (bb.getLong((i*12))!=-1){
+					keys.add(new TreeObject(bb.getLong((i*12)),bb.getInt((i*12)+8)));
 					
 				}
 				
 				// 0M4K12F16K24F28
 			}
-			int nIndex=4+(12*numKeys);
+			int nIndex=(12*numKeys);
 			//READ CHILDREN DATA
 			for (int j=0;j<numKeys+1;j++){
 				if (bb.getInt((4*j)+nIndex)!=-1){
@@ -90,7 +90,7 @@ class BTree{
 		returns true if full, false if not full
 		*/
 		public boolean isFull(){
-			System.out.println("NUM KEYS "+numKeys+"  AND KEYS SIZE "+keys.size());
+			//System.out.println("NUM KEYS "+numKeys+"  AND KEYS SIZE "+keys.size());
 			if(keys.size() >= numKeys) {
 				return true;
 			}
@@ -122,7 +122,7 @@ class BTree{
 			//TEST
 			//parentIndex=69;
 			//
-			bb.putInt(parentIndex);
+			//bb.putInt(parentIndex);
 
 			//ADD KEYS
 			for (int i=0;i<keys.size();i++){
@@ -152,6 +152,8 @@ class BTree{
 				bb.putInt(-1);
 
 			}
+			//Looking at this in a hex editor, it is obvious there are some 0's in the file at the end between the last child and the
+			//end of the actual block, this is fine however because the program will NEVER scan these.
 
 
 
@@ -332,11 +334,20 @@ class BTree{
 				split(nextInsert,i);
 				
 				//Search toInsert again before going to child
-				//
-				//
-				//
-				//
-				//
+				for (int j=0;j<toInsert.keys.size();j++){
+				int comp=obj.compareTo(toInsert.keys.get(j));
+				if (comp==0){
+					//Duplicate
+					//System.out.println("Found Duplicate");
+					toInsert.keys.get(j).increaseFrequency();
+					TFile.writeData(toInsert.toByte(),toInsert.index);
+					//DONE
+					return;
+					
+				}
+				
+				
+			}
 				
 				
 			}
@@ -362,59 +373,42 @@ class BTree{
 	public void split(BTreeNode node, int index){
 
 		//Splitting will only create 1 new node (Exception: root splits)
-		System.out.println("ATTEMPTING NODE SPLIT ON INDEX "+index);
+		System.out.println("ATTEMPTING NODE SPLIT ON INDEX "+index+" NODE KEY SIZE: "+node.keys.size());
 		BTreeNode newNode = new BTreeNode(degree, size++);
 
 		//We want to get (1,2,3) MIDDLE NODE(2)
 		//OR (1,2,3,4) MIDDLE LEFT (2)
-		int middleIndex=(int)Math.ceil((root.keys.size()/2)-1);
-		TreeObject c = root.keys.get(middleIndex);
-
-		
-		//This code is usable just needs reworking
-		// Place nodes right of c into new node, left stays in current node
-		// c will be given to node's parent node (children split between 2 nodes but no child goes to parent)
-		
+		int middleIndex=(int)Math.ceil(((double)node.keys.size()/2)-1);
+		//TreeObject c = root.keys.get(middleIndex);
+		System.out.println("MIDDLE INDEX: "+middleIndex);
 		//Parent is parent
 		//Current node is node
 		//other node is newNode
 		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		/*
-		//places lesser values in new left node
-		int i = 0;
-		for(; i < node.keys.size()/2; i++) {
-			n1.keys.set(i, node.keys.get(i));
-			n1.children.set(i, node.children.get(i));
+		//Move keys to new node
+		System.out.println("SPLIT MOVE KEYS");
+		int rKeySize=node.keys.size();
+		for (int i=middleIndex+1;i<rKeySize;i++){
+			newNode.keys.add(node.keys.remove(middleIndex+1));
 		}
-		n1.children.set(i, node.children.get(i));
-
-		//places greater values in new right node
-		i = node.keys.size()/2 + 1;
-		int j = 0;
-		for(; i < node.keys.size(); i++, j++) {
-			n2.keys.set(j, node.keys.get(i));
-			n2.children.set(j, node.children.get(i));
+		
+		
+		//Move children to new node
+		System.out.println("SPLIT MOVE CHILDREN");
+		for (int i=middleIndex+1;i<node.children.size();i++){
+			if (i<root.children.size()){
+				newNode.children.add(node.children.remove(middleIndex+1));
+			}
 		}
-		n2.children.set(j, node.children.get(i));
-
-		if(t.compareTo(c) == -1) {
-
-		}
-
-		*/
-
-
+		
+		
+		
+		//Add new node to parent's children
+		parent.children.add(index + 1, newNode.index);
+		
+		//Move middle key to parent
+		parent.keys.add(index, node.keys.remove(middleIndex));
+		
 		TFile.writeData(parent.toByte(),parent.index);
 		TFile.writeData(node.toByte(),node.index);
 		TFile.writeData(newNode.toByte(),newNode.index);
@@ -430,7 +424,7 @@ class BTree{
 	public void rootSplit(){
 		// 0 1 2 3    size=4, /2 = 2 -1 = 1
 		// 0 1 2      size=3, /2 = 1.5 -1 = .5 ciel>1
-		int middleIndex=(int)Math.ceil((root.keys.size()/2)-1);
+		int middleIndex=(int)Math.ceil(((double)root.keys.size()/2)-1);
 		TreeObject c = root.keys.get(middleIndex);
 		
 		BTreeNode left= new BTreeNode(degree, size++);
