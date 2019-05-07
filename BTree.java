@@ -194,7 +194,7 @@ class BTree {
     /**
     reConstructor from disk
     */
-    public BTree(String filename) throws IOException {
+    public BTree(String filename,int cacheSize) throws IOException {
 
         try {
             TFile = new TFileWriter(filename);
@@ -205,6 +205,12 @@ class BTree {
             numKeys = 2 * degree - 1;
             blockSize = 4096;
             root = new BTreeNode(TFile.readNodeData(0), 0);
+			
+			//Create cache
+			if (cacheSize>0){
+				System.out.println("Making cache");
+				cache=new Cache<BTreeNode>(cacheSize);
+			}
 
         } catch (Exception e) {
             e.printStackTrace(System.out);
@@ -437,6 +443,7 @@ class BTree {
         TreeObject treeKey = new TreeObject(key);
         BTreeNode search = root;
         while (true) {
+			//System.out.println("s");
             //Start comparing keys
             for (int i = 0; i < search.keys.size(); i++) {
                 int comp = treeKey.compareTo(search.keys.get(i));
@@ -450,7 +457,27 @@ class BTree {
                         return 0;
 
                     }
-                    search = new BTreeNode(TFile.readNodeData(search.children.get(i)), search.children.get(i));
+                                        //search = new BTreeNode(TFile.readNodeData(search.children.get(i)), search.children.get(i));
+					BTreeNode oldSearch=search;
+					search=null;
+					if (cache!=null){
+						//System.out.println("uh oh");
+						search = cache.removeObject(new BTreeNode(degree,oldSearch.children.get(i)));
+					}
+					if (search==null){
+						//System.out.println("good");
+						search =new BTreeNode(TFile.readNodeData(oldSearch.children.get(i)), oldSearch.children.get(i));
+					}else{
+						//System.out.println("SUCCESSFUL CACHE PULL");
+					}
+					if (cache!=null){
+						cache.addObject(search);
+					}
+							
+					
+					
+					
+					
                     break;
 
                 }
@@ -460,7 +487,22 @@ class BTree {
                         return 0;
 
                     }
-                    search = new BTreeNode(TFile.readNodeData(search.children.get(i + 1)), search.children.get(i + 1));
+                    //search = new BTreeNode(TFile.readNodeData(search.children.get(i + 1)), search.children.get(i + 1));
+					
+					BTreeNode oldSearch=search;
+					search=null;
+					if (cache!=null){
+						search = cache.removeObject(new BTreeNode(degree,oldSearch.children.get(i+1)));
+					}
+					if (search==null){
+						search =new BTreeNode(TFile.readNodeData(oldSearch.children.get(i+1)), oldSearch.children.get(i+1));
+					}else{
+						//System.out.println("SUCCESSFUL CACHE PULL");
+					}
+					if (cache!=null){
+						cache.addObject(search);
+					}
+					
                     break;
 
                 }

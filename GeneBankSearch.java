@@ -8,7 +8,7 @@ import java.util.Scanner;
 public class GeneBankSearch{
 	
 	private static String bTreeFile,queryFile;
-	private static int debugLevel =0; 
+	private static int debugLevel,cacheSize =0; 
 	private static boolean useCache = false;
 	private static GeneUtility util;
 	
@@ -38,7 +38,7 @@ public class GeneBankSearch{
 		//	printOperation();
 		//}
 		
-		if (args[0]=="1"){
+		if (args[0].equals("1")){
 			useCache=true;
 		} else if (!(args[0].equals("0") || args[0]==("1"))) {
 			printOperation();
@@ -47,8 +47,11 @@ public class GeneBankSearch{
 		bTreeFile=args[1];
 		queryFile=args[2];
 		
-		
-		if (args.length == 4){
+		if (useCache){
+			cacheSize=Integer.parseInt(args[3]);
+			
+		}
+		if (args.length == 4&&!useCache){
 			debugLevel=Integer.parseInt(args[3]);
 		}
 		
@@ -58,8 +61,7 @@ public class GeneBankSearch{
 		}catch(Exception e){
 			printOperation();
 		}
-		String sequence = " ";
-		String degree = " ";
+
 		//End parsing
 		
 			
@@ -68,8 +70,8 @@ public class GeneBankSearch{
 		
 		
 		try {
-			
-			BTree tree = new BTree(bTreeFile);
+			System.out.println("Trying search");
+			BTree tree = new BTree(bTreeFile,cacheSize);
 			Scanner scan = new Scanner (new File(queryFile));
 			while (scan.hasNextLine()){
 				String seq=scan.next();
