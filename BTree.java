@@ -21,7 +21,7 @@ class BTree {
 
     */
 
-    class BTreeNode {
+    class BTreeNode implements Comparable<BTreeNode>{
 
         //private boolean root; //if parentIndex==null we can assume root?
         private int index;
@@ -151,12 +151,22 @@ class BTree {
 
             return bb.array();
         }
+		@Override
+		public int compareTo(BTreeNode i){
+			if (index==i.index){
+				return 0;
+			}
+			return -1;
+			
+			
+		}
     }
 
     //Begin BTree.java class
     public int seqLength, degree, numKeys, blockSize, size;
     public BTreeNode root, parent, toInsert;
     private TFileWriter TFile;
+	private Cache<BTreeNode> cache;
 
 
     /**
@@ -173,6 +183,11 @@ class BTree {
         TFile.writeBOFMetaData(seqLength, degree, 12);
         root = new BTreeNode(degree, size++);
         TFile.writeData(root.toByte(), root.index);
+		
+		//Create cache
+		if (cacheSize>0){
+			cache=new Cache<BTreeNode>(cacheSize);
+		}
     }
 
 
@@ -267,9 +282,18 @@ class BTree {
 
             }
 			//System.out.println("DEBUG:\nToinsert("+toInsert.index+") children size:"+toInsert.children.size()+"\nOn i="+i+" key amount="+toInsert.keys.size());
-            BTreeNode nextInsert = new BTreeNode(TFile.readNodeData(toInsert.children.get(i)), toInsert.children.get(i));
-
-
+			BTreeNode nextInsert=null;
+			if (cache!=null){
+				nextInsert = cache.removeObject(new BTreeNode(degree,toInsert.children.get(i)));
+			}
+			if (nextInsert==null){
+				nextInsert = new BTreeNode(TFile.readNodeData(toInsert.children.get(i)), toInsert.children.get(i));
+			}else{
+				//System.out.println("SUCCESSFUL CACHE PULL");
+			}
+			if (cache!=null){
+				cache.addObject(nextInsert);
+			}
             //check if child is full, if so split
             if (nextInsert.isFull()) {
                 parent = toInsert;

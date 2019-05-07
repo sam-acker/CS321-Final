@@ -11,7 +11,7 @@ CHRIS BENTLEY
 
 
 
-class Cache < T > {
+class Cache <T extends Comparable<T>> {
 
 	private LinkedList < T > cacheList;
 	private int cacheSize;
@@ -33,10 +33,23 @@ class Cache < T > {
 			cacheList.addFirst(obj);
 		}
 	}
-
-	public void removeObject(T obj) {
-		cacheList.remove(obj);
+/*
+	public T removeObject(T obj) {
+		return cacheList.remove(obj);
 	}
+	*/
+	
+	public T removeObject(T comp){
+		for (int i=0;i< cacheList.size();i++){
+			if (cacheList.get(i).compareTo(comp)==0){
+				return cacheList.remove(i);
+			}
+		}
+		return null;
+		
+	}
+	
+	
 
 	public void removeLast() {
 		cacheList.removeLast();

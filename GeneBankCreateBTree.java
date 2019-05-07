@@ -45,7 +45,7 @@ class GeneBankCreateBTree{
 			degree=Integer.parseInt(Args[1]);
 			gbkFileName=Args[2];
 			seqLength=Integer.parseInt(Args[3]);
-			if (Args[0]=="1"){
+			if (Integer.parseInt(Args[0])==1){
 				useCache=true;
 			}
 			if (Args.length==5&&useCache==false){
@@ -57,6 +57,7 @@ class GeneBankCreateBTree{
 				if (Args.length==6){
 				debugLevel=Integer.parseInt(Args[5]);
 				}
+				System.out.println("Using cache size "+cacheSize);
 			}
 			
 		}catch(Exception e){
@@ -81,7 +82,7 @@ class GeneBankCreateBTree{
 		
 		//System.out.println(degree);
 
-
+		
 
 		//End arg parsing
 

@@ -16,6 +16,9 @@ public class GeneBankSearch{
 	
 	java GeneBankSearch <0/1(no/with Cache)> <btree file> <query file>  [<debug level>]
 	
+	java GeneBankSearch <0/1(no/with Cache)> <btree file> <query file> <cache size>
+[<debug level>]
+
 	*/
 	public static void main(String... args){
 		
