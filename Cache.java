@@ -26,18 +26,27 @@ class Cache <T extends Comparable<T>> {
 	}
 
 	public void addObject(T obj) {
-		if (!getObject(obj) && cacheSize != 0) {
-			if (cacheList.size() >= cacheSize) {
+		cacheList.addFirst(obj);
+		if (cacheList.size() > cacheSize) {
 				cacheList.removeLast();
 			}
+		
+		
+		/*
+		if (!getObject(obj) && cacheSize != 0) {
+			
 			cacheList.addFirst(obj);
 		}
+		*/
 	}
-/*
+	
+	/*
 	public T removeObject(T obj) {
 		return cacheList.remove(obj);
 	}
+	
 	*/
+	
 	
 	public T removeObject(T comp){
 		for (int i=0;i< cacheList.size();i++){

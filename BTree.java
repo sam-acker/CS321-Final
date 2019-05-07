@@ -234,7 +234,7 @@ class BTree {
         //has children, children are split to 2 new root child nodes's children
 
         if (root.isFull()) {
-            System.out.println("ATTEMPTING ROOT SPLIT");
+            //System.out.println("ATTEMPTING ROOT SPLIT");
             rootSplit();
         }
 
@@ -288,18 +288,25 @@ class BTree {
 
             }
 			//System.out.println("DEBUG:\nToinsert("+toInsert.index+") children size:"+toInsert.children.size()+"\nOn i="+i+" key amount="+toInsert.keys.size());
+			
+			
+			
+			
 			BTreeNode nextInsert=null;
 			if (cache!=null){
 				nextInsert = cache.removeObject(new BTreeNode(degree,toInsert.children.get(i)));
 			}
 			if (nextInsert==null){
 				nextInsert = new BTreeNode(TFile.readNodeData(toInsert.children.get(i)), toInsert.children.get(i));
-			}else{
-				//System.out.println("SUCCESSFUL CACHE PULL");
 			}
 			if (cache!=null){
 				cache.addObject(nextInsert);
 			}
+			
+			
+			
+			
+			
             //check if child is full, if so split
             if (nextInsert.isFull()) {
                 parent = toInsert;
@@ -333,7 +340,7 @@ class BTree {
     public void split(BTreeNode node, int index) {
 
         //Splitting will only create 1 new node (Exception: root splits)
-        System.out.println("ATTEMPTING NODE SPLIT ON INDEX " + index + " NODE KEY SIZE: " + node.keys.size()+"\nChild size="+node.children.size());
+        //System.out.println("ATTEMPTING NODE SPLIT ON INDEX " + index + " NODE KEY SIZE: " + node.keys.size()+"\nChild size="+node.children.size());
 		
         BTreeNode newNode = new BTreeNode(degree, size++);
 
@@ -341,19 +348,19 @@ class BTree {
         //OR (1,2,3,4) MIDDLE LEFT (2)
         int middleIndex = (int) Math.ceil(((double) node.keys.size() / 2) - 1);
         //TreeObject c = root.keys.get(middleIndex);
-        System.out.println("MIDDLE INDEX: " + middleIndex);
+        //System.out.println("MIDDLE INDEX: " + middleIndex);
         //Parent is parent
         //Current node is node
         //other node is newNode
         //Move keys to new node
-        System.out.println("SPLIT MOVE KEYS");
+       //System.out.println("SPLIT MOVE KEYS");
         int rKeySize = node.keys.size();
         for (int i = middleIndex + 1; i < rKeySize; i++) {
             newNode.keys.add(node.keys.remove(middleIndex + 1));
         }
 
         //Move children to new node
-        System.out.println("SPLIT MOVE CHILDREN ON middleindex="+middleIndex);
+        //System.out.println("SPLIT MOVE CHILDREN ON middleindex="+middleIndex);
 		int bugFix=node.children.size();
         for (int i = middleIndex + 1; i < bugFix; i++) {
            // if (i < root.children.size()||node.index>10) {
@@ -400,7 +407,7 @@ class BTree {
         for (int i = middleIndex + 1; i < root.keys.size(); i++) {
             right.keys.add(root.keys.get(i));
         }
-        System.out.println("Processed keys");
+       // System.out.println("Processed keys");
         //Update the root's keys
         root.keys.clear();
         root.keys.add(c);
@@ -408,7 +415,7 @@ class BTree {
         // 0 1 2 
         //0 1 2 3 
 
-        System.out.println("Prepare process left child");
+        //System.out.println("Prepare process left child");
 
         //Move children to left
         for (int i = 0; i < middleIndex + 1; i++) {
@@ -416,14 +423,14 @@ class BTree {
                 left.children.add(root.children.get(i));
             }
         }
-        System.out.println("Processed left children");
+        //System.out.println("Processed left children");
         //Move children to right
         for (int i = middleIndex + 1; i < root.children.size(); i++) {
             if (i < root.children.size()) {
                 right.children.add(root.children.get(i));
             }
         }
-        System.out.println("Processed children");
+        //System.out.println("Processed children");
         root.children.clear();
         root.children.add(left.index);
         root.children.add(right.index);
@@ -431,7 +438,7 @@ class BTree {
         TFile.writeData(left.toByte(), left.index);
         TFile.writeData(right.toByte(), right.index);
 
-        System.out.println("Root split successful");
+        //System.out.println("Root split successful");
     }
 
 
