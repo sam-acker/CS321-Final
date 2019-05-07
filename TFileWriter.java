@@ -15,6 +15,7 @@ class TFileWriter{
 	//private int seqLength,degree;
 	private String fileName;
 	private RandomAccessFile RAFile;
+	private int blockSize;
 	
 	
 	
@@ -64,6 +65,11 @@ class TFileWriter{
 		
 	}
 	
+	public void setBlockSize(int blockSize){
+		this.blockSize=blockSize;
+		System.out.println(blockSize);
+	}
+	
 	
 	
 	/**
@@ -71,9 +77,10 @@ class TFileWriter{
 	fileName will be the name OF THE T FILE
 	*/
 	
-	public TFileWriter(int seqLength, int degree, String fileName, int cacheSize){
+	public TFileWriter(int seqLength, int degree, String fileName, int cacheSize,int blockSize){
 		//this.degree=degree;
 		//this.seqLength=seqLength;
+		this.blockSize=blockSize;
 		try{
 		RAFile=new RandomAccessFile(fileName,"rw"); //read-write
 		}catch(FileNotFoundException e){
@@ -94,7 +101,7 @@ class TFileWriter{
 	
 	public void writeData(byte[] data,int nodeOffset){
 		try{
-		RAFile.seek((nodeOffset*4096)+12);
+		RAFile.seek((nodeOffset*blockSize)+12);
 		RAFile.write(data);
 		}catch(IOException e){
 			System.err.println("ERROR: An unexpected IO error has occured");
@@ -133,9 +140,9 @@ class TFileWriter{
 	*/
 	
 	public byte[] readNodeData(int nodeOffset) throws IOException{
-		byte[] nodeArray= new byte[4096];
-		RAFile.seek((nodeOffset*4096)+12);
-		RAFile.readFully(nodeArray,0,4096);
+		byte[] nodeArray= new byte[blockSize];
+		RAFile.seek((nodeOffset*blockSize)+12);
+		RAFile.readFully(nodeArray,0,blockSize);
 		return nodeArray;
 	}
 	

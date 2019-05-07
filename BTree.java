@@ -120,7 +120,7 @@ class BTree {
             //public ByteBuffer toByte(){
             //byte[] newData=new byte[4096]
             ByteBuffer bb = ByteBuffer.allocate(blockSize);
-
+			//System.out.println(blockSize);
             //ADD METADATA
 
             //TEST
@@ -176,10 +176,13 @@ class BTree {
         size = 0;
         this.seqLength = seqLength;
         this.degree = degree;
-        this.blockSize = blockSize;
+        //this.blockSize = blockSize;
         numKeys = 2 * degree - 1;
         //TFile=new TFileWriter(seqLength,degree,(fileName+"."+seqLength+".t"));
+		this.blockSize=(numKeys*12)+((numKeys+1)*4);
+		
         TFile = new TFileWriter(fileName + "." + seqLength + ".t");
+		TFile.setBlockSize(this.blockSize);
         TFile.writeBOFMetaData(seqLength, degree, 12);
         root = new BTreeNode(degree, size++);
         TFile.writeData(root.toByte(), root.index);
@@ -203,7 +206,8 @@ class BTree {
             seqLength = metadata[0];
             degree = metadata[1];
             numKeys = 2 * degree - 1;
-            blockSize = 4096;
+            blockSize=(numKeys*12)+((numKeys+1)*4);
+			TFile.setBlockSize(this.blockSize);
             root = new BTreeNode(TFile.readNodeData(0), 0);
 			
 			//Create cache
