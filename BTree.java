@@ -6,6 +6,11 @@ import java.io.FileNotFoundException;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
+import java.util.Stack;
+
+
+import java.util.concurrent.TimeUnit;
+
 /**
 BTree class
 
@@ -528,13 +533,147 @@ class BTree {
     Print the tree to a txt file (if debug==1)
     */
     public void dumpToTextfile()throws IOException {
+		//System.out.println("DUMPING");
 		BufferedWriter bwr = new BufferedWriter(new FileWriter(new File("dump.txt")));
+		GeneUtility util = new GeneUtility();
 		
-		
-		
-		
-		bwr.write("bush did 9/11");
-		
+		Stack<Integer> nodeIndexStack=new Stack<Integer>();
+		Stack<Integer> childIndexStack=new Stack<Integer>();
+		nodeIndexStack.push(root.index);
+		childIndexStack.push(0);
+		boolean ascend=false;
+		int ci=0;
+		while (!nodeIndexStack.empty()){
+			int in=nodeIndexStack.pop();
+			try{
+			//Thread.sleep(100); //DEBUG
+			}catch(Exception e){}
+			BTreeNode temp = new BTreeNode(TFile.readNodeData(in),in);
+			//System.out.println(in+"\t"+temp.keys.size());
+			
+			if (temp.isLeaf()){
+				//IS A LEAF
+				//System.out.println("IS A LEAF");
+				childIndexStack.pop();
+				for (int i=0;i<temp.keys.size();i++){
+					//Write to file
+					String toWrite=temp.keys.get(i).returnFrequency()+"\t"+util.longToSequence(temp.keys.get(i).returnKey(),seqLength);
+					bwr.write(toWrite);
+					bwr.newLine();
+					//System.out.println(toWrite);
+				}
+				//Print the parent's next key
+				if (nodeIndexStack.empty()){
+					//no parent, must be root and a leaf
+					//flush the stream
+					bwr.flush();
+					
+					//close the stream
+					bwr.close();
+					return;
+				}
+				int ip= nodeIndexStack.pop();
+				parent = new BTreeNode(TFile.readNodeData(ip),ip);
+				//int ci=childIndexStack.pop();
+				nodeIndexStack.push(ip);
+				
+				//Increment the child index and re add to stacks
+				if (ci<parent.children.size()-1){
+					bwr.write(parent.keys.get(ci).returnFrequency()+"\t"+util.longToSequence(parent.keys.get(ci).returnKey(),seqLength));
+					bwr.newLine();
+					
+				//Increment parent's child index
+				//childIndexStack.pop();
+				ci++;
+				//childIndexStack.push(ci);
+				//childIndexStack.push(ci);
+				//Re add parent to stack
+				
+				}else{
+					ci=0;
+					
+					ascend=true;
+					//System.out.println("ASCENDING FROM LEAF");
+				}
+				
+				
+				
+				
+			}else{
+				//IS NOT A LEAF
+
+				if (!ascend){
+					//System.out.println("Descend");
+					//We will descend
+					//Get node to descend into
+					if (childIndexStack.empty()){
+						//Mission complete
+						//System.out.println("No children indexes");
+						nodeIndexStack=new Stack<Integer>();
+						break;
+					}
+					int cq=childIndexStack.pop();
+					//System.out.println("PULLING A "+cq);
+					//System.out.println();
+					if (cq<temp.children.size()){
+						// DESCEND
+						nodeIndexStack.push(in);		//Re add this node to stack						
+						nodeIndexStack.push(temp.children.get(cq)); //Add new child node to stack
+						//System.out.println("Descending to child "+cq);
+						if (cq<temp.children.size()-1){
+							//ascend=true;
+						cq++;
+						childIndexStack.push(cq);
+						}
+						//System.out.println("PUSHING A ZERO");
+						childIndexStack.push(0);
+						}
+					else{
+						//We have ran out this node
+						childIndexStack.push(cq);
+						//System.out.println("ASCENDING");
+						ascend=true;
+					}
+				
+				
+				
+				
+				}else{
+				//ASCEND
+				//System.out.println("ASCEND");
+				if (nodeIndexStack.empty()||childIndexStack.empty()){
+					//Mission complete
+					//System.out.println("Ascension complete");
+					nodeIndexStack=new Stack<Integer>();
+						break;
+				}
+				//childIndexStack.pop();
+				//cq++;
+				ascend=false;
+				//nodeIndexStack.push(in);
+				}
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+			}
+			
+			
+			
+			
+			
+			
+			
+			
+			
+		}
 		
 		
 		

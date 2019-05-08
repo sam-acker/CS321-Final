@@ -67,7 +67,7 @@ class TFileWriter{
 	
 	public void setBlockSize(int blockSize){
 		this.blockSize=blockSize;
-		System.out.println(blockSize);
+		//System.out.println(blockSize);
 	}
 	
 	
