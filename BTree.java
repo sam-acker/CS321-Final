@@ -444,6 +444,8 @@ class BTree {
 
     /**
     Print the tree to a txt file (if debug==1)
+	
+	PROBLEM WITH SMALL DEGREES
     */
     public void dumpToTextfile()throws IOException {
 		BufferedWriter bwr = new BufferedWriter(new FileWriter(new File("dump.txt")));
