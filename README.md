@@ -27,7 +27,7 @@ $ javac *.java
 
 To create BTree, run 
 
-$ java GeneBankCreateBTree <0/1(no/with Cache)> <degree> <gbk file> <sequence length> debug level(optional)
+$ java GeneBankCreateBTree 0/1(no/with Cache) degree gbk file sequence length debug level(optional)
 	
 Or, if cache is used:
 	
@@ -36,11 +36,11 @@ cache size debug level(optional)
   
 To run a search query on BTree, use 
 
-$ java GeneBankSearch <0/1(no/with Cache)> <btree file> <query file>  debug level(optional)
+$ java GeneBankSearch 0/1(no/with Cache) btree file query file  debug level(optional)
 	
 Or, if cache is used:
 
-$ java GeneBankSearch <0/1(no/with Cache)> <btree file> <query file> <cache size>
+$ java GeneBankSearch 0/1(no/with Cache) btree file query file cache size
 debug level(optional)
 
 ### Additional information
