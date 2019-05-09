@@ -1,12 +1,9 @@
 import java.util.LinkedList;
 
 /**
-Idk how right this was to start with, but quite a few modifications will
-be neccesary anyways for the BTree project. 
-=======
-/*
-CS321 HW1
-CHRIS BENTLEY
+Cache 
+
+@author Chris Bentley
  */
 
 
@@ -31,22 +28,7 @@ class Cache <T extends Comparable<T>> {
 				cacheList.removeLast();
 			}
 		
-		
-		/*
-		if (!getObject(obj) && cacheSize != 0) {
-			
-			cacheList.addFirst(obj);
-		}
-		*/
 	}
-	
-	/*
-	public T removeObject(T obj) {
-		return cacheList.remove(obj);
-	}
-	
-	*/
-	
 	
 	public T removeObject(T comp){
 		for (int i=0;i< cacheList.size();i++){
@@ -58,7 +40,6 @@ class Cache <T extends Comparable<T>> {
 		
 	}
 	
-	
 
 	public void removeLast() {
 		cacheList.removeLast();
@@ -68,13 +49,6 @@ class Cache <T extends Comparable<T>> {
 		cacheList.clear();
 	}
 
-
-	public void getHitRate() {
-	}
-
-	public void getMissRate() {
-
-	}
 
 	public boolean Empty() {
 		return false;

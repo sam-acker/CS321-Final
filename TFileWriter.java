@@ -5,7 +5,7 @@ import java.io.File;
 /**
 This class will write our .data.[k].t files / interface with the file
 
-TODO: throw exceptions instead of catching here
+@author Chris Bentley
 */
 
 

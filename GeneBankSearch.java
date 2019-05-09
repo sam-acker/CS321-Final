@@ -5,6 +5,13 @@ import java.io.FileReader;
 import java.nio.ByteBuffer;
 import java.util.Scanner;
 
+/**
+Search class for btree
+
+@author Chris Bentley, Ben Kang
+*/
+
+
 public class GeneBankSearch{
 	
 	private static String bTreeFile,queryFile;

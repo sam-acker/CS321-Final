@@ -552,8 +552,6 @@ class BTree {
 			//}catch(Exception e){}
 			
 			
-			
-			
 			try{
 			}catch(Exception e){}
 			
@@ -734,33 +732,7 @@ class BTree {
 				}
 				
 				depth--;
-				//cq++;
-				//if (childIndexStack)
-					/*
-				if (depth>childIndexStack.size()){
-					System.out.println("FURTHER ASCENSION ********************");
-					nodeIndexStack.pop();
-					depth--;
-				ascend=true;
-				}else{
-				ascend=false;
-				}
-				*/
-				
-				//UNNEEDED VVV
-				//while (depth>childIndexStack.size()){
-					//System.out.println("FURTHER ASCENSION ********************");
-					
-					
-					
-					
-					
-				//	nodeIndexStack.pop();
-				//	depth--;
-					
-					
-					
-				//}
+
 				ascend=false;
 				
 				

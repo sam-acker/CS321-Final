@@ -1,7 +1,7 @@
 /**
 This class will be a single 'object' in a BTreeNode.
 
-@author Big ben
+@author Big ben , Chris Bentley
 */
 class TreeObject implements Comparable < TreeObject > {
 
@@ -41,7 +41,6 @@ class TreeObject implements Comparable < TreeObject > {
     }
 
     public int compareTo(TreeObject x) {
-		//System.out.println("Comparing " +this.key +" TO "+ x.returnKey());
         if (this.key > x.returnKey()) {
             return 1;
         } else if (this.key <x.returnKey()) {

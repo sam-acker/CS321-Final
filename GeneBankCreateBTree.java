@@ -3,7 +3,6 @@ import java.io.FileNotFoundException;
 /**
 This file creates a B Tree, accepts arguments, and runs a .gbk file parser
 
-STILL IN DEVELOPMENT
 
 
 @author Chris Bentley
