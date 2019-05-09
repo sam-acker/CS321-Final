@@ -192,6 +192,7 @@ class BTree {
         root = new BTreeNode(degree, size++);
         TFile.writeData(root.toByte(), root.index);
 		middleIndex = (int) Math.ceil(((double) numKeys / 2) - 1);
+		System.out.println(degree+"  deg  and mid:"+middleIndex);
 		//Create cache
 		if (cacheSize>0){
 			cache=new Cache<BTreeNode>(cacheSize);
@@ -248,7 +249,9 @@ class BTree {
         }
 
         //If root is fine, find node to insert to, if full, split then add key
-
+		if (key==1010l){
+			//System.out.println("inserting tttag");
+		}
         toInsert = root;
         objInsert(new TreeObject(key));
 
@@ -268,11 +271,17 @@ class BTree {
                     //Correct key spot, insert
                     toInsert.keys.add(i, obj);
                     TFile.writeData(toInsert.toByte(), toInsert.index);
+					if (obj.returnKey()==1010l){
+						System.out.println("INSERTING NEW tttag IN NODE "+toInsert.index);
+					}
                     //DONE
                     return;
                 } else if (comp == 0) {
                     //Duplicate
                     //System.out.println("Found Duplicate");
+					if (obj.returnKey()==1010l){
+						//System.out.println("incrementing tttag to "+toInsert.keys.get(i).returnFrequency());
+					}
                     toInsert.keys.get(i).increaseFrequency();
                     TFile.writeData(toInsert.toByte(), toInsert.index);
                     //DONE
@@ -289,6 +298,15 @@ class BTree {
 
             int i = 0;
             while (obj.compareTo(toInsert.keys.get(i)) != -1) {
+				if (obj.compareTo(toInsert.keys.get(i)) == 0){
+                    toInsert.keys.get(i).increaseFrequency();
+                    TFile.writeData(toInsert.toByte(), toInsert.index);
+                    //DONE
+                    return;
+					
+				}
+				
+				
                 i++;
                 if (i >= toInsert.keys.size()) {
                     //i--;
@@ -299,7 +317,17 @@ class BTree {
 			//System.out.println("DEBUG:\nToinsert("+toInsert.index+") children size:"+toInsert.children.size()+"\nOn i="+i+" key amount="+toInsert.keys.size());
 			
 			
-			
+			//if (obj.compareTo(toInsert.keys.get(i)) == 0) {
+                    //Duplicate
+                    //System.out.println("Found Duplicate");
+					//if (obj.returnKey()==1010l){
+						//System.out.println("incrementing tttag to "+toInsert.keys.get(i).returnFrequency());
+					//}
+                  //  toInsert.keys.get(i).increaseFrequency();
+                  //  TFile.writeData(toInsert.toByte(), toInsert.index);
+                    //DONE
+                  //  return;
+               // }
 			
 			BTreeNode nextInsert=null;
 			if (cache!=null){
@@ -312,7 +340,9 @@ class BTree {
 				cache.addObject(nextInsert);
 			}
 			
-			
+			if (obj.returnKey()==1010l){
+						//System.out.println("TRAVELLING tttag To NODE "+nextInsert.index);
+			}
 			
 			
 			
@@ -491,11 +521,6 @@ class BTree {
 					if (cache!=null){
 						cache.addObject(search);
 					}
-							
-					
-					
-					
-					
                     break;
 
                 }

@@ -131,7 +131,11 @@ class GbkReader {
 		seqIndex++;
 		String bpSeq = seqBuffer.substring(seqIndex - 1, seqIndex - 1 + seqLength);
 		//System.out.println("PASSING IN: "+bpSeq);
-		return util.sequenceToLong(bpSeq);
+		long out=util.sequenceToLong(bpSeq);
+		//if (bpSeq.equals("tttag")){
+			//System.out.println(out);
+		//}
+		return out;
 	}
 
 }
