@@ -81,9 +81,9 @@ public class GeneBankSearch{
 				}
 				//System.out.println(seq);
 				int freq=tree.search(util.sequenceToLong(seq));
-				if  (freq!=0){
+				//if  (freq!=0){
 				System.out.println(freq+"\t"+seq);
-				}
+				//}
 				x++;
 				//Print these
 				

@@ -153,7 +153,7 @@ class BTree {
         root = new BTreeNode(degree, size++);
         TFile.writeData(root.toByte(), root.index);
 		middleIndex = (int) Math.ceil(((double) numKeys / 2) - 1);
-		System.out.println(degree+"  deg  and mid:"+middleIndex);
+		//System.out.println(degree+"  deg  and mid:"+middleIndex);
 		//Create cache
 		if (cacheSize>0){
 			cache=new Cache<BTreeNode>(cacheSize);
@@ -182,7 +182,7 @@ class BTree {
 			}
 
         } catch (Exception e) {
-            e.printStackTrace(System.out);
+           // e.printStackTrace(System.out);
             System.err.println("ERROR: An unexpected file exception has occured BTREE RECON");
             return;
         }
@@ -203,6 +203,7 @@ class BTree {
         }
         toInsert = root;
         objInsert(new TreeObject(key));
+		
 
     }
 	/**
@@ -221,12 +222,18 @@ class BTree {
                     //Correct key spot, insert
                     toInsert.keys.add(i, obj);
                     TFile.writeData(toInsert.toByte(), toInsert.index);
+					//if (obj.returnKey()==135l){
+				//System.out.println("NEW gact");
+			//}
                     //DONE
                     return;
                 } else if (comp == 0) {
                     //Duplicate
                     toInsert.keys.get(i).increaseFrequency();
                     TFile.writeData(toInsert.toByte(), toInsert.index);
+					//if (obj.returnKey()==4l){
+				//System.out.println("NEW aaca");
+			//}
                     //DONE
                     return;
                 }
@@ -235,10 +242,24 @@ class BTree {
             //System.out.println("Found last key spot");
             toInsert.keys.add(obj);
             TFile.writeData(toInsert.toByte(), toInsert.index);
+			//if (obj.returnKey()==135l){
+				//System.out.println("NEW gact END INDEX "+toInsert.index+"Key size "+toInsert.keys.size());
+				//for (int i=0;i<toInsert.keys.size();i++){
+				//	System.out.println(toInsert.keys.get(i).returnKey());
+				//}
+				
+				
+			//}
             //DONE
             return;
         } else {
             int i = 0;
+			if (obj.returnKey()==135&&toInsert.index==5){
+				//System.out.println("Being compared to "+toInsert.keys.get(i).returnKey());
+				//for (int j=0;j<toInsert.keys.size();j++){
+				//	System.out.println(toInsert.keys.get(j).returnKey());
+				//}
+				}
             while (obj.compareTo(toInsert.keys.get(i)) != -1) {
 				if (obj.compareTo(toInsert.keys.get(i)) == 0){
                     toInsert.keys.get(i).increaseFrequency();
@@ -246,11 +267,17 @@ class BTree {
                     //DONE
                     return;
 				}
+				//if (obj.returnKey()==4l&&toInsert.index==7){
+				//System.out.println("Being compared to "+toInsert.keys.get(i).returnKey());
+				//}
                 i++;
                 if (i >= toInsert.keys.size()) {
                     break;
                 }
-            }	
+            }
+			//if (obj.returnKey()==135){
+				//System.out.println("toInsert index "+toInsert.index+" Going to i "+ toInsert.children.get(i));
+			//}
 			BTreeNode nextInsert=null;
 			if (cache!=null){
 				nextInsert = cache.removeObject(new BTreeNode(degree,toInsert.children.get(i)));
@@ -261,10 +288,12 @@ class BTree {
 			if (cache!=null){
 				cache.addObject(nextInsert);
 			}
+			boolean recheck=false;
             //check if child is full, if so split
             if (nextInsert.isFull()) {
                 parent = toInsert;
                 split(nextInsert, i);
+				recheck=true;
                 //Search toInsert again before going to child
                 for (int j = 0; j < toInsert.keys.size(); j++) {
                     int comp = obj.compareTo(toInsert.keys.get(j));
@@ -277,6 +306,48 @@ class BTree {
                     }
                 }
             }
+			
+			if (recheck){
+			i=0;
+			//if (obj.returnKey()==4l&&toInsert.index==7){
+				//System.out.println("Being compared to "+toInsert.keys.get(i).returnKey());
+				//for (int j=0;j<toInsert.keys.size();j++){
+			//		System.out.println(toInsert.keys.get(j).returnKey());
+			//	}
+			//	}
+            while (obj.compareTo(toInsert.keys.get(i)) != -1) {
+				if (obj.compareTo(toInsert.keys.get(i)) == 0){
+                    toInsert.keys.get(i).increaseFrequency();
+                    TFile.writeData(toInsert.toByte(), toInsert.index);
+                    //DONE
+                    return;
+				}
+				if (obj.returnKey()==4l&&toInsert.index==7){
+				//System.out.println("Being compared to "+toInsert.keys.get(i).returnKey());
+				}
+                i++;
+                if (i >= toInsert.keys.size()) {
+                    break;
+                }
+            }
+			if (obj.returnKey()==4l){
+				//System.out.println("toInsert index "+toInsert.index+" Going to i "+ toInsert.children.get(i));
+			}
+			nextInsert=null;
+			if (cache!=null){
+				nextInsert = cache.removeObject(new BTreeNode(degree,toInsert.children.get(i)));
+			}
+			if (nextInsert==null){
+				nextInsert = new BTreeNode(TFile.readNodeData(toInsert.children.get(i)), toInsert.children.get(i));
+			}
+			if (cache!=null){
+				cache.addObject(nextInsert);
+			}
+			
+			}
+			
+			
+			
             toInsert = nextInsert;
             objInsert(obj);
             //recursively call objInsert after setting toInsert to the child
@@ -299,6 +370,9 @@ class BTree {
         //Parent is parent
         //Current node is node
         //other node is newNode
+		//if (node.index==5){
+			//System.out.println("Splitting node 1..."+"Parent index:"+parent.index+"given index: "+index);
+		//}
         //Move keys to new node
         int rKeySize = node.keys.size();
         for (int i = middleIndex + 1; i < rKeySize; i++) {
@@ -316,9 +390,18 @@ class BTree {
 
         //Add new node to parent's children
         parent.children.add(index + 1, newNode.index);
+		TreeObject temp=node.keys.remove(middleIndex);
+		//if (node.index==5){
+			//System.out.println("Moving key "+temp.returnKey()+" to parent");
+		//}
 
         //Move middle key to parent
-        parent.keys.add(index, node.keys.remove(middleIndex));
+        parent.keys.add(index, temp);
+		//if (node.index==5){
+		//for (int i=0;i<parent.keys.size();i++){
+		//	System.out.println(parent.keys.get(i).returnKey());
+		//}
+		//}
         TFile.writeData(parent.toByte(), parent.index);
         TFile.writeData(node.toByte(), node.index);
         TFile.writeData(newNode.toByte(), newNode.index);
@@ -391,7 +474,8 @@ class BTree {
                 int comp = treeKey.compareTo(search.keys.get(i));
                 if (comp == 0) {
                     //WHAT LUCK
-                    return search.keys.get(i).returnFrequency();
+                    //return search.keys.get(i).returnFrequency();
+					return search.index;
                 }
                 if (comp == -1) {
                     //Stop here,
@@ -445,7 +529,6 @@ class BTree {
     /**
     Print the tree to a txt file (if debug==1)
 	
-	PROBLEM WITH SMALL DEGREES
     */
     public void dumpToTextfile()throws IOException {
 		BufferedWriter bwr = new BufferedWriter(new FileWriter(new File("dump.txt")));
@@ -456,16 +539,50 @@ class BTree {
 		childIndexStack.push(0);
 		boolean ascend=false;
 		int ci=0;
+		int depth=1;
+
+		//System.out.println("Root children: "+root.children.size());
 		while (!nodeIndexStack.empty()){
 			int in=nodeIndexStack.pop();
+			
+			//System.out.println("Traversing to index "+in+"\nchild stack size: "+childIndexStack.size()+" and Depth:"+depth);
+			
+			//try{
+				//Thread.sleep(200);
+			//}catch(Exception e){}
+			
+			
+			
+			
 			try{
 			}catch(Exception e){}
+			
+			
 			BTreeNode temp = new BTreeNode(TFile.readNodeData(in),in);
+			
+			//if (in==11){
+				
+				//for(int i=0;i<temp.keys.size();i++){
+			//		System.out.println(temp.keys.get(i).returnKey());
+					//System.out.println(temp.children.get(i));
+				//}
+				
+				//System.out.println("IS A LEAF? "+temp.isLeaf()+"At depth "+depth);
+				//System.exit(1);
+			//}
+			
+			//System.out.println("Temp index:"+temp.index+"  AND temp children size:"+temp.children.size());
+			
 			if (temp.isLeaf()){
 				//IS A LEAF
+				
+				//System.out.println("Node is leaf");
+				
 				childIndexStack.pop();
+				//System.out.println("Popping a "+childIndexStack.pop());
 				for (int i=0;i<temp.keys.size();i++){
 					//Write to file
+					//System.out.println(temp.keys.get(i).returnKey());
 					String toWrite=temp.keys.get(i).returnFrequency()+"\t"+util.longToSequence(temp.keys.get(i).returnKey(),seqLength);
 					bwr.write(toWrite);
 					bwr.newLine();
@@ -478,58 +595,175 @@ class BTree {
 					
 					//close the stream
 					bwr.close();
+					//System.out.println("Exit 0");
 					return;
+					
 				}
 				int ip= nodeIndexStack.pop();
 				parent = new BTreeNode(TFile.readNodeData(ip),ip);
 				nodeIndexStack.push(ip);
+				//childIndexStack.push(0);
 				//Increment the child index and re add to stacks
 				if (ci<parent.children.size()-1){
 					bwr.write(parent.keys.get(ci).returnFrequency()+"\t"+util.longToSequence(parent.keys.get(ci).returnKey(),seqLength));
+					//bwr.write("\tTHIS IS A MIDDLE KEY CASE");
+					//if (parent.keys.get(ci).returnKey()==138){
+											//flush the stream
+					//bwr.flush();
+					
+					//close the stream
+					//bwr.close();
+						//System.exit(1);
+					//}
 					bwr.newLine();
 				//Increment parent's child index
 				ci++;
+				depth--;
 				}else{
+					depth--;
+					//System.out.println("MARK FOR ASCENSION AT CI="+ci);
 					ci=0;
 					ascend=true;
 				}
 				
 			}else{
 				//IS NOT A LEAF
+				
+				//System.out.println("Node is not a leaf");
+				
 				if (!ascend){
 					//We will descend
 					//Get node to descend into
 					if (childIndexStack.empty()){
 						//Mission complete
 						nodeIndexStack=new Stack<Integer>();
+						//System.out.println("Exit 1");
 						break;
+						
 					}
+					
+					
 					int cq=childIndexStack.pop();
+					
 					if (cq<temp.children.size()){
+						//System.out.println("Descend to "+cq);
+						depth++;
 						// DESCEND
 						nodeIndexStack.push(in);		//Re add this node to stack						
 						nodeIndexStack.push(temp.children.get(cq)); //Add new child node to stack
-						if (cq<temp.children.size()-1){
+						
+						//
+						//if (cq<temp.children.size()-1){
 							//ascend=true;
 						cq++;
 						childIndexStack.push(cq);
-						}
+						//System.out.println("Do not re add cq");
+						//}
 						childIndexStack.push(0);
 						}
 					else{
 						//We have ran out this node
+						//if (temp.index==66){
+
+							
+						//}
+						
+						//System.out.println("Functionality needed ||||||||||||||");
+						//Alternate ascension i guess
+						if (!nodeIndexStack.empty()||depth==2){
+						int ip= nodeIndexStack.pop();
+						parent = new BTreeNode(TFile.readNodeData(ip),ip);
+						nodeIndexStack.push(ip);
+						//System.out.println(depth);
+						cq=childIndexStack.pop();
+						if (depth==2){
+							parent=root;
+						//	System.out.println(ip+"   WHYYYYYYYYYYYYYYYYY	"+cq);
+						//	System.out.println(root.keys.size());
+						//	System.out.println(root.keys.get(0).returnKey());
+						}
+						
+						
+						
+						
 						childIndexStack.push(cq);
-						ascend=true;
+						if (cq-1<parent.keys.size()){
+						bwr.write(parent.keys.get(cq-1).returnFrequency()+"\t"+util.longToSequence(parent.keys.get(cq-1).returnKey(),seqLength));
+						//bwr.write("\tTHIS IS AN ELEVATED ASCENSION MIDDLE KEY CASE");
+						bwr.newLine();
+						}
+						}
+						
+						depth--;
+						//childIndexStack.push(cq);
+						//ascend=true;
 					}
 				}else{
 				//ASCEND
+				//System.out.println("Ascending");
+				childIndexStack.pop();
 				if (nodeIndexStack.empty()||childIndexStack.empty()){
 					//Mission complete
+					//if (nodeIndexStack.empty()){
+						//System.out.println("Exit 2 no nodes");
+					//}
+					//if (childIndexStack.empty()){
+						//System.out.println("Exit 2 no childs");
+					//}
+					
+					
 					nodeIndexStack=new Stack<Integer>();
+					//System.out.println("Exit 2");
 						break;
+						
 				}
+				
+				int ip= nodeIndexStack.pop();
+				parent = new BTreeNode(TFile.readNodeData(ip),ip);
+				nodeIndexStack.push(ip);
+				//System.out.println(depth);
+				//if (depth<4){
+					//System.out.println(ip+"   WHYYYYYYYYYYYYYYYYY");
+				//}
+				int cq=childIndexStack.pop();
+				childIndexStack.push(cq);
+				if (cq-1<parent.children.size()-1){
+				bwr.write(parent.keys.get(cq-1).returnFrequency()+"\t"+util.longToSequence(parent.keys.get(cq-1).returnKey(),seqLength));
+				//bwr.write("\tTHIS IS AN ASCENSION MIDDLE KEY CASE");
+				bwr.newLine();
+				}
+				
+				depth--;
 				//cq++;
+				//if (childIndexStack)
+					/*
+				if (depth>childIndexStack.size()){
+					System.out.println("FURTHER ASCENSION ********************");
+					nodeIndexStack.pop();
+					depth--;
+				ascend=true;
+				}else{
 				ascend=false;
+				}
+				*/
+				
+				//UNNEEDED VVV
+				//while (depth>childIndexStack.size()){
+					//System.out.println("FURTHER ASCENSION ********************");
+					
+					
+					
+					
+					
+				//	nodeIndexStack.pop();
+				//	depth--;
+					
+					
+					
+				//}
+				ascend=false;
+				
+				
 				}
 			}
 		}
