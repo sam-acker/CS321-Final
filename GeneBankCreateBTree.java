@@ -57,7 +57,7 @@ class GeneBankCreateBTree{
 				if (Args.length==6){
 				debugLevel=Integer.parseInt(Args[5]);
 				}
-				System.out.println("Using cache size "+cacheSize);
+				//System.out.println("Using cache size "+cacheSize);
 			}
 			
 		}catch(Exception e){
@@ -127,8 +127,8 @@ class GeneBankCreateBTree{
 
 			}
 			
-			System.out.println(bTree.root.keys.size());
-			System.out.println(bTree.root.keys.get(0).returnKey());
+			//System.out.println(bTree.root.keys.size());
+			//System.out.println(bTree.root.keys.get(0).returnKey());
 
 
 
@@ -147,7 +147,7 @@ class GeneBankCreateBTree{
 			return;
 		}
 		
-		System.out.println("DONE");
+		//System.out.println("DONE");
 
 		//End GBK parsing + insertion into BTree
 

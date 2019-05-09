@@ -70,15 +70,19 @@ public class GeneBankSearch{
 		
 		
 		try {
-			System.out.println("Trying search");
+			//System.out.println("Trying search");
 			BTree tree = new BTree(bTreeFile,cacheSize);
 			Scanner scan = new Scanner (new File(queryFile));
 			while (scan.hasNextLine()){
 				String seq=scan.next();
+				if (seq.length()!=tree.getSeqLength()){
+					System.err.println("Mismatch between BTree sequence length and query file");
+					System.exit(1);
+				}
 				//System.out.println(seq);
 				int freq=tree.search(util.sequenceToLong(seq));
 				if  (freq!=0){
-				System.out.println(seq+" FREQ: "+freq);
+				System.out.println(freq+"\t"+seq);
 				}
 				x++;
 				//Print these
@@ -92,9 +96,9 @@ public class GeneBankSearch{
 			
 			
 		}catch(Exception e){
-			System.out.println(x+" QUERIES RAN");
+			System.err.println(x+" QUERIES RAN");
 			//e.printStackTrace(System.out);
-			System.err.println("End of Query file :)"); //hehe
+			System.err.println("End of Query file"); //hehe
 			
 			
 		}

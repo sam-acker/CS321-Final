@@ -217,7 +217,7 @@ class BTree {
 			
 			//Create cache
 			if (cacheSize>0){
-				System.out.println("Making cache");
+				//System.out.println("Making cache");
 				cache=new Cache<BTreeNode>(cacheSize);
 			}
 
@@ -456,8 +456,10 @@ class BTree {
 
     */
     public int search(long key) throws IOException {
+		
         TreeObject treeKey = new TreeObject(key);
         BTreeNode search = root;
+		
         while (true) {
 			//System.out.println("s");
             //Start comparing keys
@@ -533,10 +535,8 @@ class BTree {
     Print the tree to a txt file (if debug==1)
     */
     public void dumpToTextfile()throws IOException {
-		//System.out.println("DUMPING");
 		BufferedWriter bwr = new BufferedWriter(new FileWriter(new File("dump.txt")));
 		GeneUtility util = new GeneUtility();
-		
 		Stack<Integer> nodeIndexStack=new Stack<Integer>();
 		Stack<Integer> childIndexStack=new Stack<Integer>();
 		nodeIndexStack.push(root.index);
@@ -581,23 +581,15 @@ class BTree {
 				if (ci<parent.children.size()-1){
 					bwr.write(parent.keys.get(ci).returnFrequency()+"\t"+util.longToSequence(parent.keys.get(ci).returnKey(),seqLength));
 					bwr.newLine();
-					
 				//Increment parent's child index
 				//childIndexStack.pop();
 				ci++;
-				//childIndexStack.push(ci);
-				//childIndexStack.push(ci);
-				//Re add parent to stack
-				
 				}else{
 					ci=0;
 					
 					ascend=true;
 					//System.out.println("ASCENDING FROM LEAF");
 				}
-				
-				
-				
 				
 			}else{
 				//IS NOT A LEAF
@@ -613,8 +605,6 @@ class BTree {
 						break;
 					}
 					int cq=childIndexStack.pop();
-					//System.out.println("PULLING A "+cq);
-					//System.out.println();
 					if (cq<temp.children.size()){
 						// DESCEND
 						nodeIndexStack.push(in);		//Re add this node to stack						
@@ -634,10 +624,6 @@ class BTree {
 						//System.out.println("ASCENDING");
 						ascend=true;
 					}
-				
-				
-				
-				
 				}else{
 				//ASCEND
 				//System.out.println("ASCEND");
@@ -652,37 +638,8 @@ class BTree {
 				ascend=false;
 				//nodeIndexStack.push(in);
 				}
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
 			}
-			
-			
-			
-			
-			
-			
-			
-			
-			
 		}
-		
-		
-		
-		
-		
-		
-		
-		
-		
 		//flush the stream
 		bwr.flush();
 		
@@ -690,6 +647,10 @@ class BTree {
 		bwr.close();
 
     }
+	
+	public int getSeqLength(){
+		return seqLength;
+	}
 
 
 
