@@ -168,7 +168,7 @@ class BTree {
     }
 
     //Begin BTree.java class
-    public int seqLength, degree, numKeys, blockSize, size;
+    public int seqLength, degree, numKeys, blockSize, size, middleIndex;
     public BTreeNode root, parent, toInsert;
     private TFileWriter TFile;
 	private Cache<BTreeNode> cache;
@@ -191,7 +191,7 @@ class BTree {
         TFile.writeBOFMetaData(seqLength, degree, 12);
         root = new BTreeNode(degree, size++);
         TFile.writeData(root.toByte(), root.index);
-		
+		middleIndex = (int) Math.ceil(((double) numKeys / 2) - 1);
 		//Create cache
 		if (cacheSize>0){
 			cache=new Cache<BTreeNode>(cacheSize);
@@ -214,7 +214,7 @@ class BTree {
             blockSize=(numKeys*12)+((numKeys+1)*4);
 			TFile.setBlockSize(this.blockSize);
             root = new BTreeNode(TFile.readNodeData(0), 0);
-			
+			middleIndex = (int) Math.ceil(((double) numKeys / 2) - 1);
 			//Create cache
 			if (cacheSize>0){
 				//System.out.println("Making cache");
@@ -355,7 +355,7 @@ class BTree {
 
         //We want to get (1,2,3) MIDDLE NODE(2)
         //OR (1,2,3,4) MIDDLE LEFT (2)
-        int middleIndex = (int) Math.ceil(((double) node.keys.size() / 2) - 1);
+       // middleIndex = (int) Math.ceil(((double) node.keys.size() / 2) - 1);
         //TreeObject c = root.keys.get(middleIndex);
         //System.out.println("MIDDLE INDEX: " + middleIndex);
         //Parent is parent
@@ -401,7 +401,7 @@ class BTree {
     public void rootSplit() {
         // 0 1 2 3    size=4, /2 = 2 -1 = 1
         // 0 1 2      size=3, /2 = 1.5 -1 = .5 ciel>1
-        int middleIndex = (int) Math.ceil(((double) root.keys.size() / 2) - 1);
+        //int middleIndex = (int) Math.ceil(((double) root.keys.size() / 2) - 1);
         TreeObject c = root.keys.get(middleIndex);
 
         BTreeNode left = new BTreeNode(degree, size++);
