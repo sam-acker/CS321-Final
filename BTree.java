@@ -28,10 +28,8 @@ class BTree {
 
     class BTreeNode implements Comparable<BTreeNode>{
 
-        //private boolean root; //if parentIndex==null we can assume root?
         private int index;
         //KEYS
-
         public ArrayList < TreeObject > keys;
 
         //CHILDREN
@@ -45,18 +43,8 @@ class BTree {
 
         public BTreeNode(int degree, int index) {
             this.index = index;
-            //children=new int[numKeys+1];
             children = new ArrayList < Integer > (numKeys + 1);
-            //for (int i=0;i<children.length;i++){
-            //	children[i]=-1;
-            //}
-
-            //keys=new TreeObject[numKeys];
             keys = new ArrayList < TreeObject > (numKeys);
-            //for (int j=0;j<keys.length;j++){
-            //	keys[j]=new TreeObject();
-            //}
-
         }
 
         /**
@@ -67,21 +55,15 @@ class BTree {
         public BTreeNode(byte[] data, int index) {
             this.index = index;
             ByteBuffer bb = ByteBuffer.allocate(data.length);
-            //System.out.println("Reconstructing... data length: "+data.length);
             bb.put(data);
             children = new ArrayList < Integer > (numKeys + 1);
             keys = new ArrayList < TreeObject > (numKeys);
-            //READ META DATA
-            //parentIndex=bb.getInt(0);
             //READ KEY DATA
             for (int i = 0; i < numKeys; i++) {
 
                 if (bb.getLong((i * 12)) != -1) {
                     keys.add(new TreeObject(bb.getLong((i * 12)), bb.getInt((i * 12) + 8)));
-
                 }
-
-                // 0M4K12F16K24F28
             }
             int nIndex = (12 * numKeys);
             //READ CHILDREN DATA
@@ -93,13 +75,10 @@ class BTree {
         }
 
 
-
-
         /**
         returns true if full, false if not full
         */
         public boolean isFull() {
-            //System.out.println("NUM KEYS "+numKeys+"  AND KEYS SIZE "+keys.size());
             if (keys.size() >= numKeys) {
                 return true;
             }
@@ -122,17 +101,7 @@ class BTree {
         will be passed into TFileWriter for writing to file
         */
         public byte[] toByte() {
-            //public ByteBuffer toByte(){
-            //byte[] newData=new byte[4096]
             ByteBuffer bb = ByteBuffer.allocate(blockSize);
-			//System.out.println(blockSize);
-            //ADD METADATA
-
-            //TEST
-            //parentIndex=69;
-            //
-            //bb.putInt(parentIndex);
-
             //ADD KEYS
             for (int i = 0; i < keys.size(); i++) {
                 bb.putLong(keys.get(i).returnKey());
@@ -151,9 +120,6 @@ class BTree {
                 bb.putInt(-1);
 
             }
-            //Looking at this in a hex editor, it is obvious there are some 0's in the file at the end between the last child and the
-            //end of the actual block, this is fine however because the program will NEVER scan these.
-
             return bb.array();
         }
 		@Override
@@ -162,8 +128,6 @@ class BTree {
 				return 0;
 			}
 			return -1;
-			
-			
 		}
     }
 
@@ -181,11 +145,8 @@ class BTree {
         size = 0;
         this.seqLength = seqLength;
         this.degree = degree;
-        //this.blockSize = blockSize;
         numKeys = 2 * degree - 1;
-        //TFile=new TFileWriter(seqLength,degree,(fileName+"."+seqLength+".t"));
 		this.blockSize=(numKeys*12)+((numKeys+1)*4);
-		
         TFile = new TFileWriter(fileName + "." + seqLength + ".t");
 		TFile.setBlockSize(this.blockSize);
         TFile.writeBOFMetaData(seqLength, degree, 12);
@@ -204,10 +165,8 @@ class BTree {
     reConstructor from disk
     */
     public BTree(String filename,int cacheSize) throws IOException {
-
         try {
             TFile = new TFileWriter(filename);
-
             int[] metadata = TFile.readBOFMetaData();
             seqLength = metadata[0];
             degree = metadata[1];
@@ -227,15 +186,11 @@ class BTree {
             System.err.println("ERROR: An unexpected file exception has occured BTREE RECON");
             return;
         }
-
-
     }
 
 
-
-
     /**
-    insert into BTree
+    insert into BTree (runs the process)
 
     */
     public void insert(long key) throws IOException {
@@ -244,25 +199,20 @@ class BTree {
         //has children, children are split to 2 new root child nodes's children
 
         if (root.isFull()) {
-            //System.out.println("ATTEMPTING ROOT SPLIT");
             rootSplit();
         }
-
-        //If root is fine, find node to insert to, if full, split then add key
-		if (key==1010l){
-			//System.out.println("inserting tttag");
-		}
         toInsert = root;
         objInsert(new TreeObject(key));
 
-        //If not full, add as normal
-
     }
+	/**
+	Actually insert a key into the Btree
+	
+	*/
 
     public void objInsert(TreeObject obj) throws IOException {
         //actually insert key
         if (toInsert.isLeaf()) {
-            //System.out.println("leafCheck");
             //We have found the place to insert
             //figure out correct index to place into
             for (int i = 0; i < toInsert.keys.size(); i++) {
@@ -271,17 +221,10 @@ class BTree {
                     //Correct key spot, insert
                     toInsert.keys.add(i, obj);
                     TFile.writeData(toInsert.toByte(), toInsert.index);
-					if (obj.returnKey()==1010l){
-						System.out.println("INSERTING NEW tttag IN NODE "+toInsert.index);
-					}
                     //DONE
                     return;
                 } else if (comp == 0) {
                     //Duplicate
-                    //System.out.println("Found Duplicate");
-					if (obj.returnKey()==1010l){
-						//System.out.println("incrementing tttag to "+toInsert.keys.get(i).returnFrequency());
-					}
                     toInsert.keys.get(i).increaseFrequency();
                     TFile.writeData(toInsert.toByte(), toInsert.index);
                     //DONE
@@ -295,7 +238,6 @@ class BTree {
             //DONE
             return;
         } else {
-
             int i = 0;
             while (obj.compareTo(toInsert.keys.get(i)) != -1) {
 				if (obj.compareTo(toInsert.keys.get(i)) == 0){
@@ -303,32 +245,12 @@ class BTree {
                     TFile.writeData(toInsert.toByte(), toInsert.index);
                     //DONE
                     return;
-					
 				}
-				
-				
                 i++;
                 if (i >= toInsert.keys.size()) {
-                    //i--;
                     break;
                 }
-
-            }
-			//System.out.println("DEBUG:\nToinsert("+toInsert.index+") children size:"+toInsert.children.size()+"\nOn i="+i+" key amount="+toInsert.keys.size());
-			
-			
-			//if (obj.compareTo(toInsert.keys.get(i)) == 0) {
-                    //Duplicate
-                    //System.out.println("Found Duplicate");
-					//if (obj.returnKey()==1010l){
-						//System.out.println("incrementing tttag to "+toInsert.keys.get(i).returnFrequency());
-					//}
-                  //  toInsert.keys.get(i).increaseFrequency();
-                  //  TFile.writeData(toInsert.toByte(), toInsert.index);
-                    //DONE
-                  //  return;
-               // }
-			
+            }	
 			BTreeNode nextInsert=null;
 			if (cache!=null){
 				nextInsert = cache.removeObject(new BTreeNode(degree,toInsert.children.get(i)));
@@ -339,18 +261,10 @@ class BTree {
 			if (cache!=null){
 				cache.addObject(nextInsert);
 			}
-			
-			if (obj.returnKey()==1010l){
-						//System.out.println("TRAVELLING tttag To NODE "+nextInsert.index);
-			}
-			
-			
-			
             //check if child is full, if so split
             if (nextInsert.isFull()) {
                 parent = toInsert;
                 split(nextInsert, i);
-
                 //Search toInsert again before going to child
                 for (int j = 0; j < toInsert.keys.size(); j++) {
                     int comp = obj.compareTo(toInsert.keys.get(j));
@@ -370,9 +284,6 @@ class BTree {
         }
     }
 
-
-
-
     /**
     Nodes split when full
     */
@@ -380,24 +291,19 @@ class BTree {
 
         //Splitting will only create 1 new node (Exception: root splits)
         //System.out.println("ATTEMPTING NODE SPLIT ON INDEX " + index + " NODE KEY SIZE: " + node.keys.size()+"\nChild size="+node.children.size());
-		
         BTreeNode newNode = new BTreeNode(degree, size++);
-
         //We want to get (1,2,3) MIDDLE NODE(2)
         //OR (1,2,3,4) MIDDLE LEFT (2)
        // middleIndex = (int) Math.ceil(((double) node.keys.size() / 2) - 1);
         //TreeObject c = root.keys.get(middleIndex);
-        //System.out.println("MIDDLE INDEX: " + middleIndex);
         //Parent is parent
         //Current node is node
         //other node is newNode
         //Move keys to new node
-       //System.out.println("SPLIT MOVE KEYS");
         int rKeySize = node.keys.size();
         for (int i = middleIndex + 1; i < rKeySize; i++) {
             newNode.keys.add(node.keys.remove(middleIndex + 1));
         }
-
         //Move children to new node
         //System.out.println("SPLIT MOVE CHILDREN ON middleindex="+middleIndex);
 		int bugFix=node.children.size();
@@ -413,10 +319,6 @@ class BTree {
 
         //Move middle key to parent
         parent.keys.add(index, node.keys.remove(middleIndex));
-		//if (size==993){
-		//	System.out.println("Stopping at index 992, split node index="+node.index+"\nnew Node children size="+newNode.children.size()+"\nNewnode key size="+newNode.keys.size());
-		//	System.exit(0);
-		//}
         TFile.writeData(parent.toByte(), parent.index);
         TFile.writeData(node.toByte(), node.index);
         TFile.writeData(newNode.toByte(), newNode.index);
@@ -424,7 +326,7 @@ class BTree {
     }
 
     /**
-    Might need tweaking; untested
+	Custom method to split the root while retaining the original root block
 	
     */
 
@@ -446,7 +348,6 @@ class BTree {
         for (int i = middleIndex + 1; i < root.keys.size(); i++) {
             right.keys.add(root.keys.get(i));
         }
-       // System.out.println("Processed keys");
         //Update the root's keys
         root.keys.clear();
         root.keys.add(c);
@@ -454,30 +355,24 @@ class BTree {
         // 0 1 2 
         //0 1 2 3 
 
-        //System.out.println("Prepare process left child");
-
         //Move children to left
         for (int i = 0; i < middleIndex + 1; i++) {
             if (i < root.children.size()) {
                 left.children.add(root.children.get(i));
             }
         }
-        //System.out.println("Processed left children");
         //Move children to right
         for (int i = middleIndex + 1; i < root.children.size(); i++) {
             if (i < root.children.size()) {
                 right.children.add(root.children.get(i));
             }
         }
-        //System.out.println("Processed children");
         root.children.clear();
         root.children.add(left.index);
         root.children.add(right.index);
         TFile.writeData(root.toByte(), root.index);
         TFile.writeData(left.toByte(), left.index);
         TFile.writeData(right.toByte(), right.index);
-
-        //System.out.println("Root split successful");
     }
 
 
@@ -491,7 +386,6 @@ class BTree {
         BTreeNode search = root;
 		
         while (true) {
-			//System.out.println("s");
             //Start comparing keys
             for (int i = 0; i < search.keys.size(); i++) {
                 int comp = treeKey.compareTo(search.keys.get(i));
@@ -505,18 +399,14 @@ class BTree {
                         return 0;
 
                     }
-                                        //search = new BTreeNode(TFile.readNodeData(search.children.get(i)), search.children.get(i));
 					BTreeNode oldSearch=search;
 					search=null;
 					if (cache!=null){
-						//System.out.println("uh oh");
 						search = cache.removeObject(new BTreeNode(degree,oldSearch.children.get(i)));
 					}
 					if (search==null){
-						//System.out.println("good");
 						search =new BTreeNode(TFile.readNodeData(oldSearch.children.get(i)), oldSearch.children.get(i));
 					}else{
-						//System.out.println("SUCCESSFUL CACHE PULL");
 					}
 					if (cache!=null){
 						cache.addObject(search);
@@ -530,7 +420,6 @@ class BTree {
                         return 0;
 
                     }
-                    //search = new BTreeNode(TFile.readNodeData(search.children.get(i + 1)), search.children.get(i + 1));
 					
 					BTreeNode oldSearch=search;
 					search=null;
@@ -540,7 +429,6 @@ class BTree {
 					if (search==null){
 						search =new BTreeNode(TFile.readNodeData(oldSearch.children.get(i+1)), oldSearch.children.get(i+1));
 					}else{
-						//System.out.println("SUCCESSFUL CACHE PULL");
 					}
 					if (cache!=null){
 						cache.addObject(search);
@@ -550,8 +438,6 @@ class BTree {
 
                 }
             }
-
-
         }
 
     }
@@ -571,21 +457,16 @@ class BTree {
 		while (!nodeIndexStack.empty()){
 			int in=nodeIndexStack.pop();
 			try{
-			//Thread.sleep(100); //DEBUG
 			}catch(Exception e){}
 			BTreeNode temp = new BTreeNode(TFile.readNodeData(in),in);
-			//System.out.println(in+"\t"+temp.keys.size());
-			
 			if (temp.isLeaf()){
 				//IS A LEAF
-				//System.out.println("IS A LEAF");
 				childIndexStack.pop();
 				for (int i=0;i<temp.keys.size();i++){
 					//Write to file
 					String toWrite=temp.keys.get(i).returnFrequency()+"\t"+util.longToSequence(temp.keys.get(i).returnKey(),seqLength);
 					bwr.write(toWrite);
 					bwr.newLine();
-					//System.out.println(toWrite);
 				}
 				//Print the parent's next key
 				if (nodeIndexStack.empty()){
@@ -599,33 +480,25 @@ class BTree {
 				}
 				int ip= nodeIndexStack.pop();
 				parent = new BTreeNode(TFile.readNodeData(ip),ip);
-				//int ci=childIndexStack.pop();
 				nodeIndexStack.push(ip);
-				
 				//Increment the child index and re add to stacks
 				if (ci<parent.children.size()-1){
 					bwr.write(parent.keys.get(ci).returnFrequency()+"\t"+util.longToSequence(parent.keys.get(ci).returnKey(),seqLength));
 					bwr.newLine();
 				//Increment parent's child index
-				//childIndexStack.pop();
 				ci++;
 				}else{
 					ci=0;
-					
 					ascend=true;
-					//System.out.println("ASCENDING FROM LEAF");
 				}
 				
 			}else{
 				//IS NOT A LEAF
-
 				if (!ascend){
-					//System.out.println("Descend");
 					//We will descend
 					//Get node to descend into
 					if (childIndexStack.empty()){
 						//Mission complete
-						//System.out.println("No children indexes");
 						nodeIndexStack=new Stack<Integer>();
 						break;
 					}
@@ -634,40 +507,32 @@ class BTree {
 						// DESCEND
 						nodeIndexStack.push(in);		//Re add this node to stack						
 						nodeIndexStack.push(temp.children.get(cq)); //Add new child node to stack
-						//System.out.println("Descending to child "+cq);
 						if (cq<temp.children.size()-1){
 							//ascend=true;
 						cq++;
 						childIndexStack.push(cq);
 						}
-						//System.out.println("PUSHING A ZERO");
 						childIndexStack.push(0);
 						}
 					else{
 						//We have ran out this node
 						childIndexStack.push(cq);
-						//System.out.println("ASCENDING");
 						ascend=true;
 					}
 				}else{
 				//ASCEND
-				//System.out.println("ASCEND");
 				if (nodeIndexStack.empty()||childIndexStack.empty()){
 					//Mission complete
-					//System.out.println("Ascension complete");
 					nodeIndexStack=new Stack<Integer>();
 						break;
 				}
-				//childIndexStack.pop();
 				//cq++;
 				ascend=false;
-				//nodeIndexStack.push(in);
 				}
 			}
 		}
 		//flush the stream
 		bwr.flush();
-		
 		//close the stream
 		bwr.close();
 
@@ -676,8 +541,4 @@ class BTree {
 	public int getSeqLength(){
 		return seqLength;
 	}
-
-
-
-
 }
