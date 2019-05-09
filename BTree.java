@@ -474,8 +474,8 @@ class BTree {
                 int comp = treeKey.compareTo(search.keys.get(i));
                 if (comp == 0) {
                     //WHAT LUCK
-                    //return search.keys.get(i).returnFrequency();
-					return search.index;
+                    return search.keys.get(i).returnFrequency();
+					//return search.index;
                 }
                 if (comp == -1) {
                     //Stop here,
