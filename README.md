@@ -14,6 +14,7 @@ for any information to be stored on disk other than keys or children due to the 
 Each following block is a BTreeNode, which contains:
 1) Keys
 2) Children
+
 No meta data needed
 
 -----------------
@@ -26,29 +27,31 @@ $ javac *.java
 
 To create BTree, run 
 
-$ java GeneBankCreateBTree <0/1(no/with Cache)> <degree> <gbk file> <sequence length> [<debug level>]
+$ java GeneBankCreateBTree <0/1(no/with Cache)> <degree> <gbk file> <sequence length> debug level(optional)
 	
 Or, if cache is used:
 	
-$ java GeneBankCreateBTree <0/1(no/with Cache)> <degree> <gbk file> <sequence length>
-<cache size> [<debug level>]
+$ java GeneBankCreateBTree 0/1(no/with Cache) degree gbk file sequence length
+cache size debug level(optional)
   
 To run a search query on BTree, use 
 
-$ java GeneBankSearch <0/1(no/with Cache)> <btree file> <query file>  [<debug level>]
+$ java GeneBankSearch <0/1(no/with Cache)> <btree file> <query file>  debug level(optional)
 	
 Or, if cache is used:
 
 $ java GeneBankSearch <0/1(no/with Cache)> <btree file> <query file> <cache size>
-[<debug level>]
+debug level(optional)
 
 ### Additional information
 
-Running the program on test5.gbk with sequence length 31 and no cache (degree: optimal) runs in about 1 minute 9 seconds on tested computer. Running with cache can improve the runtime all the way down to about 47 seconds, however larger cache sizes will actually cause the program to take longer. I suspect this is due to the time it takes to iterate through the cache to check if an object is contained in it.
+Running the program on test5.gbk with sequence length 31 and no cache (degree: optimal) runs in about 1 minute 3 seconds on tested computer. Running with cache can improve the runtime all the way down to about 50 seconds, however larger cache sizes will actually cause the program to take longer. I suspect this is due to the time it takes to iterate through the cache to check if an object is contained in it.
 
 
 
 ## Group members
 Chris Bentley
+
 Sam Acker
+
 Ben Kang
